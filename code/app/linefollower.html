@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LineFollower Control</title>
+<style>
+  :root { --bg:#f5f6f8; --card:#fff; --ink:#1d2330; --muted:#667085; --accent:#0b6bcb; --ok:#1a7f37; --bad:#c62828; --line:#dde1e7; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14171c; --card:#1e232b; --ink:#e7eaf0; --muted:#98a2b3; --accent:#4ea1ff; --line:#2f3640; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.4 system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:14px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; border-bottom:1px solid var(--line); background:var(--card); }
+  h1 { font-size:18px; margin:0 auto 0 0; }
+  main { max-width:1000px; margin:0 auto; padding:16px; display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  section { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  h2 { font-size:15px; margin:0 0 10px; }
+  button { font:inherit; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  button.go { background:var(--ok); color:#fff; border-color:var(--ok); font-size:18px; padding:14px; }
+  button.halt { background:var(--bad); color:#fff; border-color:var(--bad); font-size:18px; padding:14px; }
+  button:disabled { opacity:.5; cursor:default; }
+  .row { display:grid; grid-template-columns:90px 1fr 60px; gap:8px; align-items:center; margin-bottom:8px; }
+  .row input[type=number] { width:100%; padding:6px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font:inherit; }
+  .muted { color:var(--muted); font-size:13px; }
+  .big { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  #log { height:260px; overflow:auto; background:#0e1116; color:#cde3ff; font:12px/1.4 ui-monospace,monospace; padding:8px; border-radius:8px; white-space:pre-wrap; }
+  #status { font-weight:600; }
+  form { display:flex; gap:8px; margin-top:8px; } form input { flex:1; padding:6px; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font:inherit; }
+  canvas { width:100%; height:60px; background:var(--bg); border-radius:8px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>LineFollower Control</h1>
+  <label class="muted">baud
+    <select id="baud"><option>9600</option><option>115200</option></select>
+  </label>
+  <button id="connect" class="primary">Verbinden</button>
+  <span id="status" class="muted">niet verbonden</span>
+</header>
+<main>
+  <section>
+    <h2>Rijden</h2>
+    <div class="big">
+      <button class="go" data-cmd="start">START</button>
+      <button class="halt" data-cmd="stop">STOP</button>
+    </div>
+    <h2 style="margin-top:16px">Kalibratie</h2>
+    <p class="muted">Zet alle sensoren boven de zwarte lijn → <b>zwart</b>. Daarna boven wit papier → <b>wit</b>.</p>
+    <div class="big">
+      <button data-cmd="calibrate black">Kalibreer zwart</button>
+      <button data-cmd="calibrate white">Kalibreer wit</button>
+      <button data-cmd="sensors">Toon sensoren</button>
+      <button data-cmd="debug">Lees parameters</button>
+    </div>
+    <h2 style="margin-top:16px">Live positie</h2>
+    <canvas id="pos" width="600" height="60"></canvas>
+    <div class="big" style="margin-top:8px">
+      <button data-cmd="debug on">Live aan</button>
+      <button data-cmd="debug off">Live uit</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Parameters <span class="muted">(worden in EEPROM bewaard)</span></h2>
+    <div id="params"></div>
+    <button id="sendAll" class="primary" style="width:100%">Alles versturen</button>
+    <p class="muted">Ki in 1/s, Kd in s. De robot rekent deze zelf om naar de cyclustijd.</p>
+  </section>
+
+  <section style="grid-column:1/-1">
+    <h2>Console</h2>
+    <div id="log"></div>
+    <form id="manual"><input id="cmd" placeholder="commando, bv. set kp 10 of help"><button>Verstuur</button></form>
+  </section>
+</main>
+<script>
+const PARAMS = [
+  ["cycle","cycle [µs]",2500,500,1],
+  ["power","power",120,0,1],
+  ["boost","boost",0,0,1],
+  ["diff","diff",0.5,0,0.05],
+  ["kp","Kp",8,0,0.5],
+  ["ki","Ki",0,0,0.1],
+  ["kd","Kd",0.25,0,0.01],
+  ["dfilter","D filter",0.5,0,0.05],
+  ["lost","lost",700,0,10],
+];
+const $ = s => document.querySelector(s);
+const log = $("#log");
+let port, writer, reader, buffer = "";
+
+function addLog(t, cls) {
+  log.textContent += t;
+  if (log.textContent.length > 20000) log.textContent = log.textContent.slice(-15000);
+  log.scrollTop = log.scrollHeight;
+}
+
+const paramsEl = $("#params");
+for (const [key,label,def,min,step] of PARAMS) {
+  const row = document.createElement("div"); row.className = "row";
+  row.innerHTML = `<label for="p_${key}">${label}</label><input type="number" id="p_${key}" value="${def}" min="${min}" step="${step}"><button data-key="${key}">set</button>`;
+  paramsEl.appendChild(row);
+}
+paramsEl.addEventListener("click", e => {
+  const k = e.target.dataset.key; if (!k) return;
+  send(`set ${k} ${$("#p_"+k).value}`);
+});
+$("#sendAll").onclick = async () => { for (const [k] of PARAMS) { await send(`set ${k} ${$("#p_"+k).value}`); await new Promise(r=>setTimeout(r,120)); } };
+document.querySelectorAll("[data-cmd]").forEach(b => b.onclick = () => send(b.dataset.cmd));
+$("#manual").onsubmit = e => { e.preventDefault(); const v = $("#cmd").value.trim(); if (v) send(v); $("#cmd").value=""; };
+
+async function send(cmd) {
+  if (!writer) { addLog("! niet verbonden\n"); return; }
+  addLog("> " + cmd + "\n");
+  await writer.write(new TextEncoder().encode(cmd + "\r\n"));
+}
+
+function handleLine(line) {
+  // live debug: "pos 3.2 out 25 L 140 R 110"
+  const m = line.match(/^pos (-?[\d.]+)/);
+  if (m) { drawPos(parseFloat(m[1]), /LOST/.test(line)); return; }
+  // parameters uit "debug" overnemen in de velden
+  const map = { "cycle time [us]":"cycle", "power":"power", "boost":"boost", "diff":"diff", "Kp":"kp", "Ki":"ki", "Kd":"kd", "D filter":"dfilter", "lost threshold":"lost" };
+  const kv = line.match(/^([^:]+):\s*(-?[\d.]+)\s*$/);
+  if (kv && map[kv[1]]) $("#p_"+map[kv[1]]).value = kv[2];
+}
+
+function drawPos(p, lost) {
+  const c = $("#pos"), g = c.getContext("2d"), w = c.width, h = c.height;
+  g.clearRect(0,0,w,h);
+  g.fillStyle = "#888"; g.fillRect(w/2-1,0,2,h);
+  const x = w/2 + (p/30)*(w/2);
+  g.fillStyle = lost ? "#c62828" : "#0b6bcb";
+  g.fillRect(x-6,8,12,h-16);
+}
+
+$("#connect").onclick = async () => {
+  if (!("serial" in navigator)) { alert("Gebruik Chrome of Edge (Web Serial API)."); return; }
+  if (port) { await disconnect(); return; }
+  try {
+    port = await navigator.serial.requestPort();
+    await port.open({ baudRate: parseInt($("#baud").value) });
+    writer = port.writable.getWriter();
+    $("#status").textContent = "verbonden"; $("#status").style.color = "var(--ok)";
+    $("#connect").textContent = "Verbreken";
+    readLoop();
+    setTimeout(() => send("debug"), 500);
+  } catch (e) { addLog("! " + e.message + "\n"); port = null; }
+};
+
+async function readLoop() {
+  const dec = new TextDecoder();
+  while (port && port.readable) {
+    reader = port.readable.getReader();
+    try {
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        const t = dec.decode(value);
+        buffer += t;
+        let i;
+        while ((i = buffer.indexOf("\n")) >= 0) {
+          const line = buffer.slice(0,i).replace("\r","");
+          buffer = buffer.slice(i+1);
+          if (!line.startsWith("pos ")) addLog(line + "\n");
+          handleLine(line);
+        }
+      }
+    } catch (e) { addLog("! " + e.message + "\n"); break; }
+    finally { reader.releaseLock(); }
+  }
+}
+
+async function disconnect() {
+  try { if (reader) await reader.cancel(); if (writer) writer.releaseLock(); await port.close(); } catch {}
+  port = writer = reader = null;
+  $("#status").textContent = "niet verbonden"; $("#status").style.color = "";
+  $("#connect").textContent = "Verbinden";
+}
+</script>
+</body>
+</html>
