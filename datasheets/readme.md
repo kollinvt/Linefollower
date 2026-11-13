@@ -1,17 +1,17 @@
 datasheets of the components used in this project
 
-| component | datasheet / documentatie |
-|---|---|
-| Arduino Micro | [docs.arduino.cc/hardware/micro](https://docs.arduino.cc/hardware/micro/) |
-| ATmega32U4 | [Microchip ATmega16U4/32U4 datasheet](https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf) |
-| DRV8833 | [Texas Instruments DRV8833](https://www.ti.com/lit/ds/symlink/drv8833.pdf) |
-| DRV8833 breakout | [Pololu DRV8833 carrier](https://www.pololu.com/product/2130) |
-| QTR-8A | [Pololu QTR-8A/QTR-8RC user's guide](https://www.pololu.com/docs/0J12) |
-| QRE1113 (sensor) | [onsemi QRE1113](https://www.onsemi.com/pdf/datasheet/qre1113-d.pdf) |
-| HC-05 | [HC-05 bluetooth module datasheet / AT commands](https://components101.com/sites/default/files/component_datasheet/HC-05%20Datasheet.pdf) |
-| N20 gear motor | [Pololu micro metal gearmotors (N20 formaat)](https://www.pololu.com/category/60/micro-metal-gearmotors) |
-| 18650 Li-ion | bv. [Samsung INR18650-25R](https://www.orbtronic.com/content/samsung-25r-datasheet-inr18650-25r.pdf) |
-| SS12D00 schuifschakelaar | typisch 0,5A 50V DC (generiek) |
+| component | pdf in deze map | bron |
+|---|---|---|
+| Arduino Micro | [Arduino_Micro_schema.pdf](Arduino_Micro_schema.pdf) (schema rev3) | [docs.arduino.cc/hardware/micro](https://docs.arduino.cc/hardware/micro/) |
+| ATmega32U4 | [ATmega32U4.pdf](ATmega32U4.pdf) | [Microchip](https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf) |
+| DRV8833 | [DRV8833.pdf](DRV8833.pdf) | [Texas Instruments](https://www.ti.com/lit/ds/symlink/drv8833.pdf) |
+| DRV8833 breakout | - | [Pololu DRV8833 carrier](https://www.pololu.com/product/2130) |
+| QTR-8A | [QTR-8A_QTR-8RC.pdf](QTR-8A_QTR-8RC.pdf) | [Pololu QTR-8A/QTR-8RC user's guide](https://www.pololu.com/docs/0J12) |
+| QRE1113 (sensor) | [QRE1113.pdf](QRE1113.pdf) | [onsemi](https://www.onsemi.com/pdf/datasheet/qre1113-d.pdf) |
+| HC-05 | [HC-05.pdf](HC-05.pdf) | [components101](https://components101.com/sites/default/files/component_datasheet/HC-05%20Datasheet.pdf) |
+| N20 gear motor | - | [Pololu micro metal gearmotors (N20 formaat)](https://www.pololu.com/category/60/micro-metal-gearmotors) |
+| 18650 Li-ion | [Samsung_INR18650-25R.pdf](Samsung_INR18650-25R.pdf) | [PowerStream](https://www.powerstream.com/p/INR18650-25R-datasheet.pdf) |
+| SS12D00 schuifschakelaar | - | typisch 0,5A 50V DC (generiek) |
 
 ### belangrijkste waardes (gecontroleerd voor dit ontwerp)
 
