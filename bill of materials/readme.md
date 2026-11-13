@@ -18,7 +18,8 @@ Ook beschikbaar als [bom.csv](bom.csv) (openen in Excel: scheidingsteken `;`).
 |8||JST-PH 2.0 connector met draad (batterij aansluiten)|nieuw|€ 0,50|1|€ 0,50|[link](https://www.tinytronics.nl/nl/zoeken?search=jst+ph)|
 |9|U4|MT3608 step-up converter (3,7V naar 5V)|nieuw|€ 1,50|1|€ 1,50|[link](https://www.tinytronics.nl/nl/zoeken?search=mt3608)|
 |10|U5|TP4056 Li-ion lader module USB-C met beveiliging|nieuw|€ 1,50|1|€ 1,50|[link](https://www.tinytronics.nl/nl/zoeken?search=tp4056)|
-|11||protoboard / gaatjesprint (op maat 80 x 140 mm)|nieuw|€ 3,00|1|€ 3,00|[link](https://www.tinytronics.nl/nl/zoeken?search=experimenteer+print)|
+|11||3D-geprinte bodemplaat 100 x 96 x 4 mm (PLA/PETG, ± 40 g filament, [robot.f3d](../technische%20tekeningen/mechanisch/robot.f3d))|nieuw|€ 1,00|1|€ 1,00|eigen 3D-printer / FabLab|
+|11b||gaatjesprint 5 x 7 cm (voedingsverdeling: SW1, C1, C2, D1, R1)|nieuw|€ 1,00|1|€ 1,00|[link](https://www.tinytronics.nl/nl/zoeken?search=experimenteer+print)|
 |12||ball caster (metalen kogel 12 mm)|nieuw|€ 1,00|1|€ 1,00|[link](https://www.aliexpress.com/w/wholesale-ball-caster-cy-12a.html)|
 |13|SW1|schuifschakelaar SS12D00 (power on/off)|nieuw|€ 0,30|1|€ 0,30|[link](https://www.tinytronics.nl/nl/zoeken?search=schuifschakelaar)|
 |14|S1|BOOT-knop op het ESP32 DevKit (start/stop) - geen extra onderdeel|-|€ 0,00|1|€ 0,00|-|
@@ -29,7 +30,7 @@ Ook beschikbaar als [bom.csv](bom.csv) (openen in Excel: scheidingsteken `;`).
 |19||female pin headers 1x40 (breakout boards inpluggen)|nieuw|€ 0,40|2|€ 0,80|[link](https://www.tinytronics.nl/nl/zoeken?search=female+header)|
 |20||M3 afstandhouders 10 mm + schroeven (sensor + caster)|nieuw|€ 1,50|1|€ 1,50|[link](https://www.tinytronics.nl/nl/zoeken?search=m3+afstandhouder)|
 |21||montagedraad 0,25 mm² (diverse kleuren) 1 m|nieuw|€ 1,00|1|€ 1,00|[link](https://www.tinytronics.nl/nl/zoeken?search=montagedraad)|
-|  |  |**totaal**|  |  |  |**€ 56,85**|  |
+|  |  |**totaal**|  |  |  |**€ 55,85**|  |
 
 ### aandachtspunten
 

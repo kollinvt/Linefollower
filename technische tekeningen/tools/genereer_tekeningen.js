@@ -212,15 +212,16 @@ const schema = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H
 fs.writeFileSync(path.join(__dirname, "..", "elektronisch", "schema_planB.svg"), schema);
 
 /* ======================================================================= */
-/* mechanische tekening (schaal 1:1 in mm, x 4 px)                          */
+/* mechanische tekening - 3D-geprint chassis (naar robot.f3d)               */
+/* robotcoördinaten in mm: X = afstand vanaf de voorkant (0 = voorkant      */
+/* sensorbalk, 100 = achterkant), Y = zijwaarts (0 = midden, + = links)     */
 /* ======================================================================= */
 s = [];
-const K = 4; // px per mm
+const K = 4.4; // px per mm
 const MW = 1400, MH = 990;
 s.push(`<rect x="0" y="0" width="${MW}" height="${MH}" fill="#fff"/>`);
 s.push(`<rect x="10" y="10" width="${MW - 20}" height="${MH - 20}" fill="none" stroke="#000" stroke-width="2"/>`);
 const T = (x, y, t, o = {}) => s.push(`<text x="${x}" y="${y}" font-size="${o.size || 13}" font-family="Arial" fill="${o.fill || "#000"}" text-anchor="${o.anchor || "start"}" font-weight="${o.bold ? "bold" : "normal"}"${o.rot ? ` transform="rotate(${o.rot} ${x} ${y})"` : ""}>${t}</text>`);
-const R = (x, y, w, h, fill, o = {}) => s.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${o.stroke || "#000"}" stroke-width="${o.sw || 1.5}"${o.dash ? ' stroke-dasharray="6 4"' : ""}${o.rx ? ` rx="${o.rx}"` : ""}/>`);
 const L = (x1, y1, x2, y2, o = {}) => s.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.col || "#000"}" stroke-width="${o.w || 1}"${o.dash ? ' stroke-dasharray="8 4 2 4"' : ""}/>`);
 s.push(`<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0040a0"/></marker></defs>`);
 function dimH(x1, x2, y, label) {
@@ -232,111 +233,108 @@ function dimV(x, y1, y2, label) {
   T(x - 6, (y1 + y2) / 2, label, { anchor: "middle", fill: "#0040a0", size: 12, rot: -90 });
 }
 
-/* bovenaanzicht: rijrichting = naar rechts.  x = lengte, y = breedte */
-T(40, 50, "BOVENAANZICHT (schaal 1:2,5 op A4 landscape - maten in mm)", { bold: true, size: 15 });
-const ox = 80, oy = 120; // linksboven van de printplaat
-const LEN = 140, WID = 80;
-const axleX = 25; // as op 25 mm van de achterkant
-// printplaat
-R(ox, oy, LEN * K, WID * K, "#e8f3e0", { rx: 6 });
-T(ox + 130, oy + WID * K - 8, "protoboard 80 x 140 mm (chassis)", { size: 12, fill: "#2a6a2a" });
-// wielen
-const wheelD = 34, wheelW = 7;
-R(ox + (axleX - wheelD / 2) * K, oy - (wheelW + 3) * K, wheelD * K, wheelW * K, "#333", { rx: 6 });
-R(ox + (axleX - wheelD / 2) * K, oy + (WID + 3) * K, wheelD * K, wheelW * K, "#333", { rx: 6 });
-// motoren (onder de print, gestippeld)
-R(ox + (axleX - 6) * K, oy + 3 * K, 12 * K, 34 * K, "none", { dash: true, stroke: "#555" });
-R(ox + (axleX - 6) * K, oy + (WID - 37) * K, 12 * K, 34 * K, "none", { dash: true, stroke: "#555" });
-T(ox + (axleX + 8) * K, oy + 22 * K, "M1 (N20)", { size: 11, fill: "#555" });
-T(ox + (axleX + 8) * K, oy + (WID - 18) * K, "M2 (N20)", { size: 11, fill: "#555" });
-// as
-L(ox + axleX * K, oy - 14 * K, ox + axleX * K, oy + (WID + 14) * K, { dash: true, col: "#a00" });
-// LiPo 1S LP785060 (50 x 60 x 7,8 mm) plat, net voor de wielbasis
-const batX = 30;
-R(ox + batX * K, oy + (WID / 2 - 30) * K, 50 * K, 60 * K, "#cfe0ff", { rx: 4 });
-T(ox + (batX + 25) * K, oy + (WID / 2 - 2) * K, "LiPo 1S 2500 mAh", { anchor: "middle", size: 12 });
-T(ox + (batX + 25) * K, oy + (WID / 2 + 3) * K, "LP785060 - 50 x 60 mm", { anchor: "middle", size: 10 });
-// DRV8833 bij de motoren
-R(ox + 4 * K, oy + (WID / 2 - 9) * K, 18 * K, 18 * K, "#ffe0e0");
-T(ox + 13 * K, oy + (WID / 2 + 1.5) * K, "U2", { anchor: "middle", size: 11 });
-// schakelaar achteraan
-R(ox + 4 * K, oy + 6 * K, 18 * K, 12 * K, "#fff2c0");
-T(ox + 13 * K, oy + 13.5 * K, "SW1", { anchor: "middle", size: 11 });
-// TP4056 achteraan (USB-C naar achter)
-R(ox + 2 * K, oy + (WID - 23) * K, 19 * K, 20 * K, "#e8e0ff");
-T(ox + 11.5 * K, oy + (WID - 12) * K, "U5", { anchor: "middle", size: 11 });
-// ESP32 DevKit (55 x 28) in de lengte, voor de batterij
-R(ox + 83 * K, oy + 4 * K, 52 * K, 28 * K, "#fff2c0");
-T(ox + 103 * K, oy + 17 * K, "U1 ESP32 DevKit", { anchor: "middle", size: 12 });
-T(ox + 103 * K, oy + 23 * K, "(BOOT-knop = S1)", { anchor: "middle", size: 10 });
-// MT3608 (36 x 17)
-R(ox + 83 * K, oy + 52 * K, 30 * K, 17 * K, "#e0f0ff");
-T(ox + 98 * K, oy + 62 * K, "U4 MT3608", { anchor: "middle", size: 11 });
-// power led
-s.push(`<circle cx="${ox + 88 * K}" cy="${oy + 75 * K}" r="${1.5 * K}" fill="#2c2" stroke="#000"/>`);
-T(ox + 92 * K, oy + 76.5 * K, "D1", { size: 11 });
-// ball caster (onder de print)
-s.push(`<circle cx="${ox + 104 * K}" cy="${oy + 42 * K}" r="${6 * K}" fill="none" stroke="#555" stroke-dasharray="5 3" stroke-width="1.5"/>`);
-T(ox + 104 * K, oy + 50 * K, "ball caster (onder)", { anchor: "middle", size: 10, fill: "#555" });
-// Yahboom 8-kanaals sensor (± 20 x 75 actief deel) onderaan vooraan, gestippeld
-const sensX = axleX + 100;
-R(ox + (sensX - 8) * K, oy + 2 * K, 16 * K, (WID - 4) * K, "none", { dash: true, stroke: "#0060c0", sw: 2 });
-for (let i = 0; i < 8; i++) {
-  const sy = WID / 2 + (i - 3.5) * 9;
-  s.push(`<rect x="${ox + (sensX - 2) * K}" y="${oy + (sy - 1.5) * K}" width="${4 * K}" height="${3 * K}" fill="#0060c0"/>`);
+/* bovenaanzicht: voorkant rechts (rijrichting →), achterkant links */
+const ox = 90, oy = 340;               // ox = scherm-x van de achterkant (X=100), oy = middenlijn
+const LEN = 100;
+const px = X => ox + (LEN - X) * K;    // robot X -> scherm x
+const py = Y => oy - Y * K;            // robot Y -> scherm y
+const poly = (pts, fill, o = {}) => s.push(`<polygon points="${pts.map(([X, Y]) => `${px(X).toFixed(1)},${py(Y).toFixed(1)}`).join(" ")}" fill="${fill}" stroke="${o.stroke || "#000"}" stroke-width="${o.sw || 1.6}"${o.dash ? ' stroke-dasharray="6 4"' : ""}/>`);
+const rect = (X1, Y1, X2, Y2, fill, o = {}) => poly([[X1, Y1], [X2, Y1], [X2, Y2], [X1, Y2]], fill, o);
+
+T(40, 50, "BOVENAANZICHT - 3D-geprinte bodemplaat (naar robot.f3d) - maten in mm", { bold: true, size: 15 });
+
+// plaat (4 mm, PLA/PETG): sensorbalk 0..20, schuine overgang 20..40, breed deel 40..60, achterstuk 60..100
+const plate = [
+  [0, 24], [0, -24], [20, -24], [40, -48], [60, -48], [60, -30], [100, -30],
+  [100, 30], [60, 30], [60, 48], [40, 48], [20, 24],
+];
+poly(plate, "#dde3ea");
+// gleuf in de sensorbalk
+rect(8.5, -22, 10, 22, "#b9c3cf", { sw: 1 });
+T(px(10), py(-27), "sensorbalk + gleuf", { anchor: "middle", size: 11, fill: "#333" });
+// wielen in de uitsparingen (Ø34, 7 breed), as op X = 80
+const axleX = 80;
+for (const side of [1, -1]) {
+  rect(axleX - 17, side * 39, axleX + 17, side * 46, "#333", { sw: 1 });
+  rect(axleX - 6, side * 4, axleX + 6, side * 36, "none", { dash: true, stroke: "#555", sw: 1.2 }); // N20 onder de plaat
 }
-T(ox + (sensX + 11) * K, oy + (WID / 2) * K, "U3 Yahboom 8-kanaals (onder)", { size: 11, fill: "#0060c0", rot: -90, anchor: "middle" });
+T(px(axleX), py(20), "M1 (N20, onder)", { anchor: "middle", size: 11, fill: "#555" });
+T(px(axleX), py(-18), "M2 (N20, onder)", { anchor: "middle", size: 11, fill: "#555" });
+L(px(axleX), py(56), px(axleX), py(-56), { dash: true, col: "#a00" });
+// onderdelen (uit de schetsen in Fusion)
+rect(27.3, -26, 56.3, 26, "#fff2c0");
+T(px(41.8), py(2), "U1 ESP32 DevKit", { anchor: "middle", size: 12, rot: -90 });
+rect(65.3, 0.4, 83.3, 16.4, "#ffe0e0");
+T(px(74.3), py(7), "U2 DRV8833", { anchor: "middle", size: 10 });
+rect(61.2, -19.3, 83.2, -2.3, "#e0f0ff");
+T(px(72.2), py(-12), "U4 MT3608", { anchor: "middle", size: 10 });
+// sensor onder de sensorbalk
+rect(4, -38, 16, 38, "none", { dash: true, stroke: "#0060c0", sw: 2 });
+for (let i = 0; i < 8; i++) {
+  const sy = (i - 3.5) * 9;
+  rect(8.5, sy - 1.5, 11.5, sy + 1.5, "#0060c0", { stroke: "#0060c0", sw: 0.5 });
+}
+T(px(-10), py(0), "U3 Yahboom 8-kanaals (onder)", { anchor: "middle", size: 11, fill: "#0060c0", rot: -90 });
+// bevestigingsgaten (M3)
+for (const [X, Y] of [[10, 15], [10, -15], [50, 38], [50, -38], [90, 0]]) s.push(`<circle cx="${px(X)}" cy="${py(Y)}" r="${1.6 * K}" fill="#fff" stroke="#000"/>`);
 // rijrichting
-s.push(`<line x1="${ox + LEN * K + 30}" y1="${oy + WID / 2 * K}" x2="${ox + LEN * K + 110}" y2="${oy + WID / 2 * K}" stroke="#000" stroke-width="2" marker-end="url(#a)"/>`);
-T(ox + LEN * K + 70, oy + WID / 2 * K - 10, "rijrichting", { anchor: "middle", size: 12 });
+s.push(`<line x1="${px(0) + 60}" y1="${oy}" x2="${px(0) + 140}" y2="${oy}" stroke="#000" stroke-width="2" marker-end="url(#a)"/>`);
+T(px(0) + 100, oy - 10, "rijrichting", { anchor: "middle", size: 12 });
 // maten
-dimH(ox, ox + LEN * K, oy + (WID + 22) * K, "140");
-dimH(ox + axleX * K, ox + sensX * K, oy + (WID + 30) * K, "100 (as → sensor)");
-dimH(ox, ox + axleX * K, oy + (WID + 30) * K, "25");
-dimV(ox - 20, oy, oy + WID * K, "80");
-dimV(ox + LEN * K + 20, oy - (wheelW + 3) * K, oy + (WID + wheelW + 3) * K, "100 (totale breedte)");
+dimH(px(100), px(0), py(-48) + 40, "100");
+dimH(px(axleX), px(10), py(-48) + 70, "70 (wielas → sensor)");
+dimH(px(100), px(axleX), py(-48) + 70, "20");
+dimH(px(60), px(40), py(48) - 20, "20");
+dimV(px(100) - 30, py(30), py(-30), "60");
+dimV(px(20) - 2, py(24) + 2, py(-24) - 2, "");
+T(px(20) - 8, py(-30), "48", { size: 12, fill: "#0040a0" });
+dimV(px(58), py(48) + 1, py(-48) - 1, "");
+T(px(58) - 8, py(-36), "96", { size: 12, fill: "#0040a0", rot: -90 });
 
 /* zijaanzicht */
-const sx = 80, groundY = 900;
-T(40, 640, "ZIJAANZICHT", { bold: true, size: 15 });
-L(sx - 30, groundY, sx + LEN * K + 60, groundY, { w: 2 });
-// wiel
-s.push(`<circle cx="${sx + axleX * K}" cy="${groundY - 17 * K}" r="${17 * K}" fill="#333"/>`);
-// motor
-R(sx + (axleX - 5) * K, groundY - 23 * K, 10 * K, 12 * K, "#999");
-// print op 24 mm
-const pcbY = groundY - 25.6 * K;
-R(sx, pcbY, LEN * K, 1.6 * K, "#2a6a2a", { stroke: "#2a6a2a" });
-// LiPo plat (50 lang, 7,8 hoog)
-R(sx + batX * K, pcbY - 8 * K, 50 * K, 8 * K, "#cfe0ff", { rx: 3 });
-// ESP32 DevKit (op headers ± 14 mm hoog)
-R(sx + 83 * K, pcbY - 14 * K, 55 * K, 14 * K, "#fff2c0");
-// caster
-s.push(`<circle cx="${sx + 104 * K}" cy="${groundY - 6 * K}" r="${6 * K}" fill="#bbb" stroke="#000"/>`);
-L(sx + 104 * K, groundY - 12 * K, sx + 104 * K, pcbY + 1.6 * K, { w: 3, col: "#777" });
-// sensor op 3 mm van de grond via M3 afstandhouders
-R(sx + (sensX - 6.5) * K, groundY - 4.6 * K, 13 * K, 1.6 * K, "#0060c0", { stroke: "#0060c0" });
-L(sx + (sensX - 4) * K, groundY - 4.6 * K, sx + (sensX - 4) * K, pcbY + 1.6 * K, { w: 3, col: "#777" });
-L(sx + (sensX + 4) * K, groundY - 4.6 * K, sx + (sensX + 4) * K, pcbY + 1.6 * K, { w: 3, col: "#777" });
+const sx = 90, groundY = 905;
+const sxX = X => sx + (LEN - X) * K;
+T(40, 650, "ZIJAANZICHT", { bold: true, size: 15 });
+L(sx - 30, groundY, sxX(0) + 60, groundY, { w: 2 });
+s.push(`<circle cx="${sxX(axleX)}" cy="${groundY - 17 * K}" r="${17 * K}" fill="#333"/>`);
+s.push(`<rect x="${sxX(axleX + 6)}" y="${groundY - 23 * K}" width="${12 * K}" height="${12 * K}" fill="#999" stroke="#000"/>`);
+const pcbY = groundY - 27 * K; // onderkant plaat op ± 23 mm
+s.push(`<rect x="${sxX(100)}" y="${pcbY}" width="${100 * K}" height="${4 * K}" fill="#9aa7b5" stroke="#000"/>`);
+// ESP32 op headers
+s.push(`<rect x="${sxX(56.3)}" y="${pcbY - 14 * K}" width="${29 * K}" height="${14 * K}" fill="#fff2c0" stroke="#000"/>`);
+// DRV8833 + MT3608
+s.push(`<rect x="${sxX(83.3)}" y="${pcbY - 6 * K}" width="${22 * K}" height="${6 * K}" fill="#e0f0ff" stroke="#000"/>`);
+// LiPo (onder de plaat tussen de motoren en de sensor)
+s.push(`<rect x="${sxX(60)}" y="${pcbY + 4 * K}" width="${50 * K}" height="${8 * K}" fill="#cfe0ff" stroke="#000" stroke-dasharray="5 3"/>`);
+T(sxX(35), pcbY + 10 * K, "LiPo (positie vrij te kiezen)", { anchor: "middle", size: 10 });
+// sensor onder de sensorbalk
+s.push(`<rect x="${sxX(16)}" y="${groundY - 4.6 * K}" width="${12 * K}" height="${1.6 * K}" fill="#0060c0"/>`);
+L(sxX(10), groundY - 4.6 * K, sxX(10), pcbY + 4 * K, { w: 3, col: "#777" });
+// glijder vooraan
+s.push(`<circle cx="${sxX(30)}" cy="${groundY - 5 * K}" r="${5 * K}" fill="#bbb" stroke="#000"/>`);
+L(sxX(30), groundY - 10 * K, sxX(30), pcbY + 4 * K, { w: 3, col: "#777" });
+T(sxX(30), groundY + 16, "ball caster", { anchor: "middle", size: 11, fill: "#555" });
 // spoiler
-s.push(`<polygon points="${sx - 2 * K},${pcbY - 34 * K} ${sx + 18 * K},${pcbY - 34 * K} ${sx + 18 * K},${pcbY - 31 * K} ${sx - 2 * K},${pcbY - 30 * K}" fill="#d33" stroke="#000"/>`);
-L(sx + 6 * K, pcbY - 31 * K, sx + 6 * K, pcbY, { w: 2 });
-T(sx + 22 * K, pcbY - 31 * K, "spoiler (3D print / karton, optioneel)", { size: 11, fill: "#a00" });
-// maten zijaanzicht
-dimV(sx + LEN * K + 30, groundY, groundY - 40 * K, "40 (&lt; 120 chronobrug)");
-dimV(sx + (sensX + 12) * K, groundY, groundY - 3 * K, "");
-T(sx + (sensX + 14) * K, groundY - 1 * K, "3 mm", { size: 11, fill: "#0040a0" });
+s.push(`<polygon points="${sxX(102)},${pcbY - 20 * K} ${sxX(84)},${pcbY - 20 * K} ${sxX(84)},${pcbY - 17 * K} ${sxX(102)},${pcbY - 16 * K}" fill="#d33" stroke="#000"/>`);
+L(sxX(95), pcbY - 17 * K, sxX(95), pcbY, { w: 2 });
+T(sxX(80), pcbY - 17 * K, "spoiler (optioneel)", { size: 11, fill: "#a00" });
+dimV(sxX(0) + 30, groundY, pcbY - 14 * K, "± 41 (&lt; 120 chronobrug)");
 dimV(sx - 20, groundY, groundY - 34 * K, "Ø34 wiel");
+T(sxX(0) + 40, groundY - 2, "sensor ± 3 mm boven de baan", { size: 11, fill: "#0040a0" });
+
+/* preview uit Fusion */
+s.push(`<image href="robot_fusion_preview.png" x="${MW - 470}" y="60" width="430" height="430"/>`);
+T(MW - 255, 500, "3D-model (Fusion 360: robot.f3d)", { anchor: "middle", size: 12, fill: "#555" });
 
 /* titelblok */
 const mx = MW - 430, my = MH - 150;
 s.push(`<rect x="${mx}" y="${my}" width="410" height="130" fill="#fff" stroke="#000" stroke-width="2"/>`);
 L(mx, my + 40, mx + 410, my + 40); L(mx, my + 75, mx + 410, my + 75);
 T(mx + 10, my + 27, "LineFollower - plan B - mechanische layout", { bold: true, size: 16 });
-T(mx + 10, my + 62, "Syntheseproject HOGENT - maten in mm", { size: 13 });
-T(mx + 10, my + 98, "massa ± 150 g - zwaartepunt net voor de wielas", { size: 12 });
-T(mx + 10, my + 116, "afmetingen L x B x H: 140 x 100 x 40 mm   rev 2.0", { size: 12 });
+T(mx + 10, my + 62, "3D-geprinte bodemplaat 4 mm - maten in mm (± 1 mm)", { size: 13 });
+T(mx + 10, my + 98, "bron: robot.f3d (Fusion 360) - massa ± 150 g", { size: 12 });
+T(mx + 10, my + 116, "afmetingen L x B x H: 100 x 96 x ± 41 mm   rev 3.0", { size: 12 });
 
-const mech = `<svg xmlns="http://www.w3.org/2000/svg" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">\n${s.join("\n")}\n</svg>\n`;
+const mech = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">\n${s.join("\n")}\n</svg>\n`;
 fs.writeFileSync(path.join(__dirname, "..", "mechanisch", "mechanisch_planB.svg"), mech);
 console.log("ok");

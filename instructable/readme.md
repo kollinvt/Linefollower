@@ -2,7 +2,7 @@
 
 Een instructable is een stappenplan - zonder verdere uitleg - hoe je vertrekkend van de bill of materials en gebruik makend van de technische tekeningen de robot kan nabouwen. Ook de nodige stappen om de microcontroller te compileren en te uploaden staan beschreven.  
 
-**benodigd gereedschap**: soldeerbout + tin, kniptang, striptang, multimeter, kleine schroevendraaier (potmeter MT3608), ijzerzaag of breekmes + lat, boormachine Ø3 mm.
+**benodigd gereedschap**: 3D-printer (of FabLab), soldeerbout + tin, kniptang, striptang, multimeter, kleine schroevendraaier (potmeter MT3608), boortje Ø3 mm.
 
 ### stap 1
 bestel alle componenten uit de [bill of materials](../bill%20of%20materials/readme.md)  
@@ -11,34 +11,34 @@ bestel alle componenten uit de [bill of materials](../bill%20of%20materials/read
 druk de [mechanische tekening](../technische%20tekeningen/mechanisch/mechanisch_planB.pdf) en het [elektronisch schema](../technische%20tekeningen/elektronisch/schema_planB.pdf) af op A4
 
 ### stap 3
-zaag / breek het protoboard op **80 x 140 mm** en schuur de randen glad
+open [robot.f3d](../technische%20tekeningen/mechanisch/robot.f3d) in Fusion 360, exporteer de bodemplaat als **STL** (rechtsklik op de body → *Save as Mesh*) en print hem in PLA of PETG (0,2 mm, 3 wanden, 25-30 % infill, plat, zonder support)
 
 ### stap 4
-leg alle onderdelen op het protoboard volgens de mechanische tekening en markeer de posities met een stift
+verwijder de printresten en ruim de gaten Ø3 mm uit met een boortje
 
 ### stap 5
-boor 2 gaten Ø3 mm voor de ball caster (x = 104 mm, midden) en 2 gaten Ø3 mm voor de sensor (x = 125 mm, volgens de bevestigingsgaten van de Yahboom-sensor)
+leg alle onderdelen op de plaat volgens de mechanische tekening (ESP32 midden, DRV8833 + MT3608 achteraan, sensor onder de sensorbalk) en controleer of alles past
 
 ### stap 6
 soldeer 2 draden (± 6 cm) aan de aansluitingen van elke N20 motor
 
 ### stap 7
-monteer beide N20 motoren met de motorbeugels onderaan de print, as op **25 mm** van de achterkant, assen naar buiten; druk de wielen op de assen
+monteer beide N20 motoren met de motorbeugels onderaan de plaat, as op **20 mm** van de achterkant, assen naar buiten. Druk de wielen op de assen: ze vallen in de uitsparingen van de plaat.
 
 ### stap 8
-monteer de ball caster onderaan met M3 afstandhouders, zodat de print horizontaal staat
+monteer de ball caster onderaan (± 30 mm van de voorkant) met M3 afstandhouders, zodat de plaat horizontaal staat
 
 ### stap 9
-monteer de Yahboom-sensor onderaan vooraan met M3 afstandhouders, sensoren naar beneden, ± **3 mm** boven de grond
+monteer de Yahboom-sensor onder de **sensorbalk** met M3 afstandhouders, sensoren naar beneden, ± **3 mm** boven de grond
 
 ### stap 10
-soldeer female pin headers voor de ESP32 DevKit en de DRV8833 op het protoboard (posities volgens de tekening)
+soldeer female pin headers voor de ESP32 DevKit en de DRV8833 op een stukje gaatjesprint en schroef / lijm die op de plaat op de geschetste posities (M3, of dubbelzijdige foam tape)
 
 ### stap 11
 sluit de MT3608 aan op een labovoeding of op de LiPo, meet de uitgang en draai aan de potmeter tot **5,0V** (dit **vóór** je de ESP32 aansluit!)
 
 ### stap 12
-soldeer SW1, de TP4056, de MT3608, D1 + R1, C1 en C2 op het protoboard volgens het schema (let op: polariteit van C1 en D1)
+soldeer SW1, D1 + R1, C1 en C2 op de kleine gaatjesprint (voedingsverdeling) en bevestig de TP4056 en de MT3608 achteraan op de plaat (let op: polariteit van C1 en D1)
 
 ### stap 13
 soldeer een JST-PH connector met draden: rood → BAT+ (TP4056 B+ en SW1), zwart → GND (TP4056 B-)
@@ -59,7 +59,7 @@ leg de **signaaldraden** aan volgens het [aansluitschema](../technische%20tekeni
 controleer met de multimeter (zonder batterij, zonder breakout boards): **geen kortsluiting tussen VBAT en GND, +5V en GND, +3V3 en GND en tussen VBAT en +5V**
 
 ### stap 19
-plug de ESP32 DevKit en de DRV8833 in hun headers (let op de oriëntatie) en bevestig de LiPo plat voor de wielas (dubbelzijdige foam tape of klittenband, geen hotglue)
+plug de ESP32 DevKit en de DRV8833 in hun headers (let op de oriëntatie) en bevestig de LiPo net voor de wielas (klittenband of een geprinte houder, geen hotglue)
 
 ### stap 20
 installeer de **Arduino IDE 2** (arduino.cc/en/software)
