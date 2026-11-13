@@ -2,27 +2,29 @@ datasheets of the components used in this project
 
 | component | pdf in deze map | bron |
 |---|---|---|
-| Arduino Micro | [Arduino_Micro_schema.pdf](Arduino_Micro_schema.pdf) (schema rev3) | [docs.arduino.cc/hardware/micro](https://docs.arduino.cc/hardware/micro/) |
-| ATmega32U4 | [ATmega32U4.pdf](ATmega32U4.pdf) | [Microchip](https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7766-8-bit-AVR-ATmega16U4-32U4_Datasheet.pdf) |
+| ESP32 (chip) | [ESP32.pdf](ESP32.pdf) | [Espressif](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) |
+| ESP32-WROOM-32 (module) | [ESP32-WROOM-32.pdf](ESP32-WROOM-32.pdf) | [Espressif](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf) |
+| ESP32 DevKit (referentieschema) | [ESP32-DevKitC_schema.pdf](ESP32-DevKitC_schema.pdf) | [Espressif](https://dl.espressif.com/dl/schematics/esp32_devkitc_v4-sch.pdf) |
 | DRV8833 | [DRV8833.pdf](DRV8833.pdf) | [Texas Instruments](https://www.ti.com/lit/ds/symlink/drv8833.pdf) |
-| DRV8833 breakout | - | [Pololu DRV8833 carrier](https://www.pololu.com/product/2130) |
-| QTR-8A | [QTR-8A_QTR-8RC.pdf](QTR-8A_QTR-8RC.pdf) | [Pololu QTR-8A/QTR-8RC user's guide](https://www.pololu.com/docs/0J12) |
-| QRE1113 (sensor) | [QRE1113.pdf](QRE1113.pdf) | [onsemi](https://www.onsemi.com/pdf/datasheet/qre1113-d.pdf) |
-| HC-05 | [HC-05.pdf](HC-05.pdf) | [components101](https://components101.com/sites/default/files/component_datasheet/HC-05%20Datasheet.pdf) |
+| MT3608 (step-up) | [MT3608.pdf](MT3608.pdf) | [Olimex](https://www.olimex.com/Products/Breadboarding/BB-PWR-3608/resources/MT3608.pdf) |
+| TP4056 (lader) | [TP4056.pdf](TP4056.pdf) | [SparkFun](https://dlnmh9ip6v2uc.cloudfront.net/datasheets/Prototyping/TP4056.pdf) |
+| Yahboom 8-kanaals lijnsensor | - | [Yahboom](https://category.yahboom.net/search?q=8-channel+line+tracking) (handleiding + UART-protocol op de productpagina) |
+| PKCELL LiPo LP785060 | - | [TinyTronics productpagina](https://www.tinytronics.nl/nl/power/batterijen/li-po/pkcell-li-po-batterij-3.7v-2500mah-jst-ph-lp785060) |
 | N20 gear motor | - | [Pololu micro metal gearmotors (N20 formaat)](https://www.pololu.com/category/60/micro-metal-gearmotors) |
-| 18650 Li-ion | [Samsung_INR18650-25R.pdf](Samsung_INR18650-25R.pdf) | [PowerStream](https://www.powerstream.com/p/INR18650-25R-datasheet.pdf) |
-| SS12D00 schuifschakelaar | - | typisch 0,5A 50V DC (generiek) |
 
 ### belangrijkste waardes (gecontroleerd voor dit ontwerp)
 
 | component | parameter | waarde | in dit ontwerp |
 |---|---|---|---|
-| Arduino Micro | VIN | 7..12V aanbevolen | 6..8,4V (2S Li-ion): werkt, onder ± 6,5V wordt 5V minder stabiel |
-| DRV8833 | VM | 2,7..10,8V | 8,4V max ✔ |
-| DRV8833 | stroom per kanaal | 1,5A RMS (2A piek) | N20 stall ± 0,6..1A ✔ |
-| DRV8833 | RDSon (high + low side) | 360 mΩ | verlies < 0,4V ✔ |
-| QTR-8A | voeding | 3,3..5V, ± 100 mA | 5V ✔ |
-| QTR-8A | optimale afstand | 3 mm (max. 6 mm) | 3 mm ✔ |
-| HC-05 | voeding module | 3,6..6V | 5V ✔ |
-| HC-05 | RXD logica | 3,3V | spanningsdeler 1k/2k ✔ |
-| ATmega32U4 | ADC | 10 bit, ± 100 µs per conversie | 6 sensoren ± 0,7 ms ✔ |
+| ESP32 | logica / GPIO | 3,3V, **niet 5V-tolerant** | sensor-TX moet 3,3V zijn (anders spanningsdeler) |
+| ESP32 | strapping pins | GPIO0, 2, 5, 12, 15 | GPIO0 = BOOT-knop (niet indrukken bij opstarten), motoren op 25/26/27/33 ✔ |
+| ESP32 | LEDC pwm | tot 40 MHz, 1..20 bit | 20 kHz, 8 bit ✔ |
+| ESP32 DevKit | VIN / 5V | 5V via USB of pin | 5,0V van de MT3608 ✔ |
+| ESP32 | stroom | ± 80 mA, pieken ± 250 mA (WiFi zenden) | MT3608 levert ruim genoeg ✔ |
+| DRV8833 | VM | 2,7..10,8V | LiPo 3,0..4,2V ✔ |
+| DRV8833 | stroom per kanaal | 1,5A RMS (2A piek) | N20 ✔ |
+| DRV8833 | RDSon (high + low side) | 360 mΩ | weinig verlies, belangrijk bij 1S ✔ |
+| MT3608 | VIN | 2..24V | 3,0..4,2V ✔ |
+| MT3608 | max. schakelstroom | 2A (piek) | 5V-belasting ± 0,4A ✔ |
+| TP4056 | laadstroom / eindspanning | 1A (instelbaar met Rprog) / 4,2V | 2500 mAh cel → 0,4C ✔ |
+| LiPo LP785060 | spanning | 3,0..4,2V, 2500 mAh, met beveiliging | |

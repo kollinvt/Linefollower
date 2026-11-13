@@ -10,27 +10,31 @@
 
 | van | naar | net |
 |---|---|---|
-| batterij + (via SW1) | U1 VIN, U2 VM, C1, C2 | VBAT (6..8,4V) |
-| batterij - | alle GND's | GND |
-| U1 5V | U2 nSLEEP, U3 VCC, U4 VCC, R3 + D1 | +5V |
-| U3 OUT2..OUT7 | U1 A0..A5 | S2..S7 |
-| U1 D4 | U3 LEDON | LEDON |
-| U1 D5 / D6 | U2 AIN1 / AIN2 | linker motor M1 |
-| U1 D9 / D10 | U2 BIN1 / BIN2 | rechter motor M2 |
-| U2 AOUT1 / AOUT2 | M1 | |
-| U2 BOUT1 / BOUT2 | M2 | |
-| U4 TXD | U1 D0 (RX1) | BT_TXD |
-| U1 D1 (TX1) → R1 1k → | U4 RXD, R2 2k naar GND | BT_RXD (3,3V) |
-| U1 D7 (INT6) | S1 → GND | D7_BTN |
+| LiPo + (vóór SW1) | TP4056 B+ | BAT+ (opladen, ook als de robot uit staat) |
+| LiPo + via SW1 | DRV8833 VM, MT3608 VIN+, C1, C2 | VBAT (3,0..4,2V) |
+| LiPo - | alle GND's | GND |
+| MT3608 VOUT+ (5,0V) | ESP32 VIN, sensor 5V, R1 + D1 | +5V |
+| ESP32 3V3 | DRV8833 nSLEEP | +3V3 |
+| ESP32 GPIO26 / GPIO27 | DRV8833 AIN1 / AIN2 | linker motor M1 |
+| ESP32 GPIO25 / GPIO33 | DRV8833 BIN1 / BIN2 | rechter motor M2 |
+| DRV8833 AOUT1 / AOUT2 | M1 | |
+| DRV8833 BOUT1 / BOUT2 | M2 | |
+| sensor TX | ESP32 GPIO16 (RX2) | SENS_TX |
+| ESP32 GPIO17 (TX2) | sensor RX | SENS_RX |
+| ESP32 GPIO0 | BOOT-knop → GND (op het DevKit) | BTN |
 
-## aandachtspunten (uit de proof of concepts)
+## aandachtspunten
 
-* Alle GND's zijn fysiek met elkaar verbonden: batterij, Arduino, h-brug, sensor en bluetooth.
-* Er zijn **2 positieve spanningen** die nooit met elkaar verbonden mogen worden:
-  * **VBAT** (vermogen, rechtstreeks van de batterij naar de h-brug en VIN)
-  * **+5V** (stuurspanning, van de spanningsregelaar van de Arduino Micro)
-* De motoren worden **rechtstreeks uit de batterij** gevoed via de h-brug, nooit uit de 5V van de Arduino.
-* De spanningsregelaar van de Arduino Micro (max. 12V in, ± 500 mA) levert de 5V. Verbruik op 5V: sensor ± 100 mA (IR leds), HC-05 ± 40 mA, led 3 mA → ruim binnen de grenzen.
-* HC-05 RXD werkt op 3,3V logica: de spanningsdeler R1/R2 maakt van 5V ongeveer 3,3V. TXD (3,3V) wordt door de ATmega32U4 als logisch 1 herkend.
-* C1 (100 µF) en C2 (100 nF) over VBAT dempen de stroompieken van de motoren, zodat de Arduino niet reset tijdens het optrekken.
-* DRV8833 nSLEEP hoog = actief. De pwm gaat telkens naar één ingang terwijl de andere laag is (fast decay).
+* Alle GND's zijn fysiek met elkaar verbonden: LiPo, DRV8833, MT3608, ESP32 en sensor.
+* Er zijn **3 positieve spanningen** die nooit met elkaar verbonden mogen worden:
+  * **VBAT**: vermogen, rechtstreeks van de LiPo naar de h-brug en de step-up
+  * **+5V**: van de MT3608 naar de ESP32 (VIN) en de sensor
+  * **+3V3**: van de spanningsregelaar op het ESP32 DevKit (logica)
+* De motoren worden **rechtstreeks uit de LiPo** gevoed via de DRV8833 (VM 2,7..10,8V → 1S is in orde), nooit uit de 5V of 3V3.
+* **MT3608**: regel de uitgang af op **5,0V voordat** je de ESP32 aansluit. Een step-up levert standaard vaak meer dan 5V.
+* **ESP32-pinnen zijn 3,3V-logica.** Controleer in de datasheet van de Yahboom-sensor dat zijn TX op 3,3V werkt. Zendt hij op 5V, plaats dan een spanningsdeler (bv. 1k/2k) tussen sensor-TX en GPIO16.
+* **GPIO0** is een strapping pin: de knop mag niet ingedrukt zijn tijdens het opstarten (anders gaat de ESP32 in downloadmodus).
+* GPIO25, 26, 27 en 33 zijn vrije uitgangen zonder bootfunctie, dus geschikt voor pwm.
+* C1 (100 µF) en C2 (100 nF) over VBAT dempen de stroompieken van de motoren, zodat de ESP32 niet reset bij het optrekken (brown-out).
+
+> **Aannames**: de voedingsopbouw (MT3608, TP4056, SW1) en de power led D1 zijn afgeleid. Controleer ze tegen je eigen robot en pas het schema aan als het anders gebouwd is.

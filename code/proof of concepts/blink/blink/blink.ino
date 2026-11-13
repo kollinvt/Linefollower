@@ -1,14 +1,16 @@
 /*
- * Proof of concept: blink
- * Toont aan dat de programmeeromgeving, drivers en upload werken en dat de
- * kloksnelheid klopt: de led op D13 moet exact 1x per seconde knipperen
- * (60x in 1 minuut - controleer met een stopwatch).
+ * Proof of concept: blink (ESP32 DevKit)
+ * Toont aan dat de Arduino IDE, het ESP32 board package, de USB-driver
+ * (CP210x / CH340) en het uploaden werken, en dat de klok klopt:
+ * de blauwe led (GPIO2) knippert precies 60x per minuut.
  */
-const byte PIN_LED = 13;
+const int PIN_LED = 2;
 
 void setup()
 {
   pinMode(PIN_LED, OUTPUT);
+  Serial.begin(115200);
+  Serial.printf("CPU %u MHz\n", getCpuFrequencyMhz());
 }
 
 void loop()

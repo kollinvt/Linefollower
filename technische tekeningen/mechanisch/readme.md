@@ -10,21 +10,23 @@
 | onderdeel | positie (vanaf achterkant print, in mm) | waarom |
 |---|---|---|
 | wielas (2x N20 onder de print) | x = 25 | aandrijving achteraan, sensor zo ver mogelijk vooraan |
-| batterijhouder 2x 18650 (dwars) | x = 32 .. 73 | zwaarste onderdeel **net voor de wielbasis** → stabiel, genoeg grip op de wielen |
-| DRV8833 + SW1 | x = 4 .. 22 | **korte vermogendraden** tussen batterij, h-brug en motoren |
-| Arduino Micro + HC-05 | x = 78 .. 126 | bovenop, USB-poort bereikbaar |
-| ball caster (onder) | x = 104 | draagt de voorkant, net achter de sensor |
-| QTR-8A sensor (onder) | x = 125 (= **100 mm voor de wielas**) | richtlijn 8-12 cm: vroeg bijsturen bij hoge snelheid |
-| start/stop knop + power led | vooraan rechts | goed bereikbaar bij het starten op de baan |
+| LiPo 1S 50 x 60 mm (plat) | x = 30 .. 80 | zwaarste onderdeel **net voor de wielbasis**: stabiel en genoeg grip op de wielen |
+| DRV8833, SW1, TP4056 | x = 2 .. 22 | **korte vermogendraden** tussen batterij, h-brug en motoren; USB-C laadpoort achteraan |
+| ESP32 DevKit | x = 83 .. 135 | bovenop; USB en BOOT-knop (start/stop) bereikbaar |
+| MT3608 | x = 83 .. 113 | naast de ESP32, korte 5V-draad |
+| ball caster (onder) | x = 104 | draagt de voorkant |
+| Yahboom 8-kanaals sensor (onder) | x = 125 (= **100 mm voor de wielas**) | richtlijn 8-12 cm: vroeg bijsturen bij hoge snelheid |
 
 ## maten
 
 * print (chassis): 80 x 140 mm protoboard, 1,6 mm dik
-* totale breedte over de wielen: ± 100 mm → **past onder de chronobrug** (12 cm breed)
-* totale hoogte: ± 50 mm (hoogste punt = batterijhouder) → **< 12 cm**
-* sensorhoogte boven de baan: **3 mm** (via M3 afstandhouders, bijstellen met ringetjes)
-* wieldiameter 34 mm, wielbreedte 7 mm
-* massa: ± 200 g
+* totale breedte over de wielen: ± 100 mm, dus **past onder de chronobrug** (12 cm breed)
+* totale hoogte: ± 40 mm (hoogste punt = ESP32 op headers), dus **< 12 cm**
+* sensorhoogte boven de baan: ± 3 mm (afstelbaar met M3 afstandhouders en ringetjes; zie datasheet sensor)
+* wieldiameter 34 mm
+* massa: ± 150 g (LiPo ± 45 g)
+
+> De maten van de Yahboom-sensor en de exacte posities zijn een richtlijn. Meet je eigen robot na en pas de tekening aan in `genereer_tekeningen.js`.
 
 ## spoiler
 

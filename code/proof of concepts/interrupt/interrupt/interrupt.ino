@@ -1,31 +1,33 @@
 /*
- * Proof of concept: non-blocking start/stop via een hardware interrupt
- * Drukknop tussen D7 (INT6) en GND, interne pull-up.
- * Iedere druk wisselt de toestand run / stop, ONGEACHT wat de loop doet.
- * Om dat aan te tonen voert de loop expres een trage (blokkerende) taak uit:
- * de led D13 reageert toch onmiddellijk.
+ * Proof of concept: non-blocking start/stop via een hardware interrupt (ESP32)
+ * Knop: BOOT-knop van het DevKit bord = GPIO0 naar GND (of een externe
+ * drukknop tussen een vrije GPIO en GND). Interne pull-up.
+ * De led op GPIO2 wisselt meteen bij een druk, ook al blokkeert de loop
+ * expres 2 s met delay().
  */
-const byte PIN_BUTTON = 7;
-const byte PIN_LED = 13;
+#define BUTTON_PIN 0
+#define LED_PIN 2
 
 volatile bool run = false;
-volatile unsigned long lastPress = 0;
+volatile bool changed = false;
+volatile uint32_t lastPress = 0;
 
-void onButton()
+void IRAM_ATTR onButton()
 {
-  unsigned long now = millis();
+  uint32_t now = millis();
   if (now - lastPress < 250) return; // software debounce
   lastPress = now;
   run = !run;
-  digitalWrite(PIN_LED, run);
+  changed = true;
+  digitalWrite(LED_PIN, run);
 }
 
 void setup()
 {
   Serial.begin(115200);
-  pinMode(PIN_LED, OUTPUT);
-  pinMode(PIN_BUTTON, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(PIN_BUTTON), onButton, FALLING);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), onButton, FALLING);
 }
 
 void loop()

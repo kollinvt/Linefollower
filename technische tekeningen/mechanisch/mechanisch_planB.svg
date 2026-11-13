@@ -4,7 +4,7 @@
 <defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0040a0"/></marker></defs>
 <text x="40" y="50" font-size="15" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">BOVENAANZICHT (schaal 1:2,5 op A4 landscape - maten in mm)</text>
 <rect x="80" y="120" width="560" height="320" fill="#e8f3e0" stroke="#000" stroke-width="1.5" rx="6"/>
-<text x="410" y="432" font-size="12" font-family="Arial" fill="#2a6a2a" text-anchor="start" font-weight="normal">protoboard 80 x 140 mm (chassis)</text>
+<text x="210" y="432" font-size="12" font-family="Arial" fill="#2a6a2a" text-anchor="start" font-weight="normal">protoboard 80 x 140 mm (chassis)</text>
 <rect x="112" y="80" width="136" height="28" fill="#333" stroke="#000" stroke-width="1.5" rx="6"/>
 <rect x="112" y="452" width="136" height="28" fill="#333" stroke="#000" stroke-width="1.5" rx="6"/>
 <rect x="156" y="132" width="48" height="136" fill="none" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4"/>
@@ -12,31 +12,34 @@
 <text x="212" y="208" font-size="11" font-family="Arial" fill="#555" text-anchor="start" font-weight="normal">M1 (N20)</text>
 <text x="212" y="368" font-size="11" font-family="Arial" fill="#555" text-anchor="start" font-weight="normal">M2 (N20)</text>
 <line x1="180" y1="64" x2="180" y2="496" stroke="#a00" stroke-width="1" stroke-dasharray="8 4 2 4"/>
-<rect x="208" y="126" width="164" height="308" fill="#cfe0ff" stroke="#000" stroke-width="1.5" rx="4"/>
-<text x="290" y="280" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">2x 18650</text>
-<text x="290" y="300" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">batterijhouder</text>
+<rect x="200" y="160" width="200" height="240" fill="#cfe0ff" stroke="#000" stroke-width="1.5" rx="4"/>
+<text x="300" y="272" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">LiPo 1S 2500 mAh</text>
+<text x="300" y="292" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">LP785060 - 50 x 60 mm</text>
 <rect x="96" y="244" width="72" height="72" fill="#ffe0e0" stroke="#000" stroke-width="1.5"/>
 <text x="132" y="286" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U2</text>
-<rect x="96" y="144" width="72" height="88" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
-<text x="132" y="192" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">SW1</text>
-<rect x="392" y="152" width="192" height="72" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
-<text x="488" y="196" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U1 Arduino Micro</text>
-<rect x="392" y="344" width="120" height="64" fill="#e0f0ff" stroke="#000" stroke-width="1.5"/>
-<text x="452" y="384" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U4 HC-05</text>
-<circle cx="552" cy="360" r="12" fill="#d33" stroke="#000"/>
-<text x="528" y="364" font-size="11" font-family="Arial" fill="#000" text-anchor="end" font-weight="normal">S1</text>
-<circle cx="552" cy="404" r="6" fill="#2c2" stroke="#000"/>
-<text x="528" y="410" font-size="11" font-family="Arial" fill="#000" text-anchor="end" font-weight="normal">D1</text>
-<circle cx="496" cy="280" r="24" fill="none" stroke="#555" stroke-dasharray="5 3" stroke-width="1.5"/>
-<text x="496" y="324" font-size="11" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">ball caster (onder)</text>
-<rect x="554" y="130" width="52" height="300" fill="none" stroke="#0060c0" stroke-width="2" stroke-dasharray="6 4"/>
-<rect x="572" y="178.75" width="16" height="12" fill="#0060c0"/>
-<rect x="572" y="216.85" width="16" height="12" fill="#0060c0"/>
-<rect x="572" y="254.95" width="16" height="12" fill="#0060c0"/>
-<rect x="572" y="293.05" width="16" height="12" fill="#0060c0"/>
-<rect x="572" y="331.15" width="16" height="12" fill="#0060c0"/>
-<rect x="572" y="369.25" width="16" height="12" fill="#0060c0"/>
-<text x="616" y="280" font-size="11" font-family="Arial" fill="#0060c0" text-anchor="middle" font-weight="normal" transform="rotate(-90 616 280)">U3 QTR-8A (onder)</text>
+<rect x="96" y="144" width="72" height="48" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
+<text x="132" y="174" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">SW1</text>
+<rect x="88" y="348" width="76" height="80" fill="#e8e0ff" stroke="#000" stroke-width="1.5"/>
+<text x="126" y="392" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U5</text>
+<rect x="412" y="136" width="208" height="112" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
+<text x="492" y="188" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U1 ESP32 DevKit</text>
+<text x="492" y="212" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">(BOOT-knop = S1)</text>
+<rect x="412" y="328" width="120" height="68" fill="#e0f0ff" stroke="#000" stroke-width="1.5"/>
+<text x="472" y="368" font-size="11" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U4 MT3608</text>
+<circle cx="432" cy="420" r="6" fill="#2c2" stroke="#000"/>
+<text x="448" y="426" font-size="11" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">D1</text>
+<circle cx="496" cy="288" r="24" fill="none" stroke="#555" stroke-dasharray="5 3" stroke-width="1.5"/>
+<text x="496" y="320" font-size="10" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">ball caster (onder)</text>
+<rect x="548" y="128" width="64" height="304" fill="none" stroke="#0060c0" stroke-width="2" stroke-dasharray="6 4"/>
+<rect x="572" y="148" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="184" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="220" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="256" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="292" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="328" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="364" width="16" height="12" fill="#0060c0"/>
+<rect x="572" y="400" width="16" height="12" fill="#0060c0"/>
+<text x="624" y="280" font-size="11" font-family="Arial" fill="#0060c0" text-anchor="middle" font-weight="normal" transform="rotate(-90 624 280)">U3 Yahboom 8-kanaals (onder)</text>
 <line x1="670" y1="280" x2="750" y2="280" stroke="#000" stroke-width="2" marker-end="url(#a)"/>
 <text x="710" y="270" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">rijrichting</text>
 <line x1="80" y1="528" x2="640" y2="528" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
@@ -54,8 +57,8 @@
 <circle cx="180" cy="832" r="68" fill="#333"/>
 <rect x="160" y="808" width="40" height="48" fill="#999" stroke="#000" stroke-width="1.5"/>
 <rect x="80" y="797.6" width="560" height="6.4" fill="#2a6a2a" stroke="#2a6a2a" stroke-width="1.5"/>
-<rect x="208" y="713.6" width="164" height="84" fill="#cfe0ff" stroke="#000" stroke-width="1.5" rx="6"/>
-<rect x="392" y="765.6" width="192" height="32" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
+<rect x="200" y="765.6" width="200" height="32" fill="#cfe0ff" stroke="#000" stroke-width="1.5" rx="3"/>
+<rect x="412" y="741.6" width="220" height="56" fill="#fff2c0" stroke="#000" stroke-width="1.5"/>
 <circle cx="496" cy="876" r="24" fill="#bbb" stroke="#000"/>
 <line x1="496" y1="852" x2="496" y2="804" stroke="#777" stroke-width="3"/>
 <rect x="554" y="881.6" width="52" height="6.4" fill="#0060c0" stroke="#0060c0" stroke-width="1.5"/>
@@ -64,8 +67,8 @@
 <polygon points="72,661.6 152,661.6 152,673.6 72,677.6" fill="#d33" stroke="#000"/>
 <line x1="104" y1="673.6" x2="104" y2="797.6" stroke="#000" stroke-width="2"/>
 <text x="168" y="673.6" font-size="11" font-family="Arial" fill="#a00" text-anchor="start" font-weight="normal">spoiler (3D print / karton, optioneel)</text>
-<line x1="670" y1="900" x2="670" y2="700" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="664" y="800" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 664 800)">50 (&lt; 120 chronobrug)</text>
+<line x1="670" y1="900" x2="670" y2="740" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="664" y="820" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 664 820)">40 (&lt; 120 chronobrug)</text>
 <line x1="628" y1="900" x2="628" y2="888" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
 <text x="622" y="894" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 622 894)"></text>
 <text x="636" y="896" font-size="11" font-family="Arial" fill="#0040a0" text-anchor="start" font-weight="normal">3 mm</text>
@@ -76,6 +79,6 @@
 <line x1="970" y1="915" x2="1380" y2="915" stroke="#000" stroke-width="1"/>
 <text x="980" y="867" font-size="16" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">LineFollower - plan B - mechanische layout</text>
 <text x="980" y="902" font-size="13" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">Syntheseproject HOGENT - maten in mm</text>
-<text x="980" y="938" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">massa ± 200 g - zwaartepunt net voor de wielas</text>
-<text x="980" y="956" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">afmetingen L x B x H: 140 x 100 x 50 mm   rev 1.0</text>
+<text x="980" y="938" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">massa ± 150 g - zwaartepunt net voor de wielas</text>
+<text x="980" y="956" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">afmetingen L x B x H: 140 x 100 x 40 mm   rev 2.0</text>
 </svg>

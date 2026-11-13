@@ -15,12 +15,12 @@ De elektronische schakelingen van de proof of concepts komen bij voorkeur overee
 
 | proof of concept | toont aan | code |
 |---|---|---|
-| [blink](blink/readme.md) | IDE, drivers, upload en kloksnelheid werken | [blink.ino](blink/blink/blink.ino) |
+| [blink](blink/readme.md) | IDE, ESP32 board package, driver, upload en klok werken | [blink.ino](blink/blink/blink.ino) |
 | [hbridge](hbridge/readme.md) | 2 motoren onafhankelijk, traploos, in beide richtingen | [hbridge.ino](hbridge/hbridge/hbridge.ino) |
-| [sensor](sensor/readme.md) | 6 sensoren individueel uitlezen, volledig ADC bereik | [sensor.ino](sensor/sensor/sensor.ino) |
+| [sensor](sensor/readme.md) | 8 sensoren individueel uitlezen via UART, volledig bereik | [sensor.ino](sensor/sensor/sensor.ino) |
 | [interrupt](interrupt/readme.md) | non-blocking start/stop via een hardware interrupt | [interrupt.ino](interrupt/interrupt/interrupt.ino) |
-| [wireless communication](wireless%20communication/readme.md) | duplex communicatie met laptop / smartphone via bluetooth | [wireless.ino](wireless%20communication/wireless/wireless.ino) |
+| [wireless communication](wireless%20communication/readme.md) | duplex communicatie met laptop / smartphone via WiFi | [wireless.ino](wireless%20communication/wireless/wireless.ino) |
 
 Alle proof of concepts gebruiken **dezelfde pinnen als de finale robot** (zie [elektronisch schema](../../technische%20tekeningen/elektronisch/readme.md)). Ze kunnen dus zonder aanpassingen op de afgewerkte robot gebruikt worden om hardwarefouten op te sporen.
 
-Board in de Arduino IDE: **Tools → Board → Arduino AVR Boards → Arduino Micro**. Alle sketches zijn getest op compileren met `arduino-cli compile -b arduino:avr:micro`.
+**Arduino IDE**: installeer het board package **esp32 by Espressif** (Bordenbeheer) en kies **Tools → Board → ESP32 Dev Module**. Voor `wireless` en de finale code heb je de bibliotheek **WebSockets** van Markus Sattler nodig (Bibliotheekbeheer). Alle sketches zijn getest op compileren met `arduino-cli compile -b esp32:esp32:esp32` (esp32 core 3.0.6).

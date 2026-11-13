@@ -1,151 +1,194 @@
 /*
- * Basis programma - LineFollower plan B
+ * Basis programma - LineFollower (ESP32)
  * ---------------------------------------------------------------------------
- * Kapstok voor de finale code. Volgende zaken werken hier samen:
- *  - instelbare parameters via SerialCommand (USB én bluetooth HC-05)
- *      set cycle <µs>, set debug on|off, start, stop, debug
- *  - parameters worden opgeslagen in het EEPROM geheugen
+ * Kapstok waarop de finale code gebouwd is. Hier werken samen:
+ *  - draadloze communicatie: WiFi access point "LineFollower-basis" (12345678),
+ *    webpagina op http://192.168.4.1 + websocket (poort 81)
+ *  - dezelfde commando's ook via USB (seriële monitor 115200, newline):
+ *      start | stop | debug | set cycle <µs> | set debug on|off
+ *  - parameters bewaard in flash (Preferences = EEPROM-emulatie van de ESP32)
+ *    => na een reset / spanningsloos start de robot met de laatste waardes
  *  - vaste cyclus (zoals een plc) + meting van de rekentijd
- *  - start/stop ook via een drukknop op een externe interrupt (D7)
- *  - demo in de cyclus: led D13 knippert (1 Hz) zolang de robot "rijdt"
+ *  - start/stop via de BOOT-knop (GPIO0) met een hardware interrupt
+ *  - demo in de cyclus: led GPIO2 knippert aan 1 Hz zolang de robot "rijdt"
+ *
+ * Bibliotheek: "WebSockets" van Markus Sattler.
  */
-#include "SerialCommand.h"
-#include "EEPROMAnything.h"
+#include <WiFi.h>
+#include <WebServer.h>
+#include <WebSocketsServer.h>
+#include <Preferences.h>
 
-#define USB_PORT Serial
-#define BT_PORT Serial1
+#define BUTTON_PIN 0
+#define LED_PIN 2
 
-const byte PIN_BUTTON = 7;
-const byte PIN_LED = 13;
-const unsigned int PARAM_VERSION = 0xB001;
-
-SerialCommand sCmdUsb(USB_PORT);
-SerialCommand sCmdBt(BT_PORT);
+WebServer server(80);
+WebSocketsServer ws(81);
+Preferences prefs;
 
 struct param_t
 {
-  unsigned int version;
-  unsigned long cycleTime; // µs
-  /* andere parameters die in het eeprom geheugen moeten opgeslagen worden ... */
+  uint32_t cycleTime; // µs
+  bool debug;
 } params;
 
 volatile bool run = false;
-volatile unsigned long lastPress = 0;
-bool debug;
-unsigned long previous, calculationTime, cycleCount;
+volatile uint32_t lastPress = 0;
+uint32_t previous, calculationTime, cycleCount, lastDebug;
 
-void setup()
+static const char PAGE[] PROGMEM =
+    "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>"
+    "<title>basis</title></head><body style='font-family:sans-serif'><h3>LineFollower basis</h3>"
+    "<button onclick=\"s('start')\">start</button> <button onclick=\"s('stop')\">stop</button> "
+    "<button onclick=\"s('debug')\">debug</button>"
+    "<p><input id='t' placeholder='set cycle 2000'><button onclick='s(t.value)'>verstuur</button></p><pre id='log'></pre>"
+    "<script>const w=new WebSocket('ws://'+location.hostname+':81/');"
+    "w.onmessage=e=>{log.textContent=e.data+'\\n'+log.textContent.slice(0,3000)};"
+    "function s(m){w.send(m)}</script></body></html>";
+
+/* ---------------- parameters in flash ---------------- */
+void paramsLoad()
 {
-  USB_PORT.begin(115200);
-  BT_PORT.begin(9600);
+  prefs.begin("basis", true);
+  params.cycleTime = prefs.getUInt("cycle", 1000);
+  params.debug = prefs.getBool("debug", false);
+  prefs.end();
+}
 
-  addCommands(sCmdUsb);
-  addCommands(sCmdBt);
+void paramsSave()
+{
+  prefs.begin("basis", false);
+  prefs.putUInt("cycle", params.cycleTime);
+  prefs.putBool("debug", params.debug);
+  prefs.end();
+}
 
-  EEPROM_readAnything(0, params);
-  if (params.version != PARAM_VERSION)
+/* ---------------- antwoorden naar USB + alle websocket clients ---------------- */
+void reply(const char *fmt, ...)
+{
+  char b[160];
+  va_list a;
+  va_start(a, fmt);
+  vsnprintf(b, sizeof(b), fmt, a);
+  va_end(a);
+  Serial.println(b);
+  ws.broadcastTXT(b);
+}
+
+/* ---------------- commando's ---------------- */
+void handleCommand(char *cmd)
+{
+  char *word = strtok(cmd, " ");
+  if (!word) return;
+
+  if (strcmp(word, "start") == 0) { run = true; reply("started"); }
+  else if (strcmp(word, "stop") == 0) { run = false; reply("stopped"); }
+  else if (strcmp(word, "debug") == 0)
   {
-    params.version = PARAM_VERSION;
-    params.cycleTime = 1000;
-    EEPROM_writeAnything(0, params);
+    reply("state: %s", run ? "running" : "stopped");
+    reply("cycle time: %u", params.cycleTime);
+    reply("debug: %s", params.debug ? "on" : "off");
+    reply("calculation time: %u", calculationTime);
+    calculationTime = 0;
   }
-
-  pinMode(PIN_LED, OUTPUT);
-  pinMode(PIN_BUTTON, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(PIN_BUTTON), onButton, FALLING);
-
-  USB_PORT.println("ready");
-  BT_PORT.println("ready");
-}
-
-void addCommands(SerialCommand &c)
-{
-  c.addCommand("set", onSet);
-  c.addCommand("debug", onDebug);
-  c.addCommand("start", onStart);
-  c.addCommand("stop", onStop);
-  c.setDefaultHandler(onUnknownCommand);
-}
-
-void loop()
-{
-  sCmdUsb.readSerial();
-  sCmdBt.readSerial();
-
-  unsigned long current = micros();
-  if (current - previous >= params.cycleTime)
+  else if (strcmp(word, "set") == 0)
   {
-    previous = current;
-
-    /* code die cyclisch moet uitgevoerd worden: led knippert op 1 Hz,
-       onafhankelijk van de ingestelde cyclustijd */
-    if (run)
-    {
-      cycleCount++;
-      unsigned long half = 500000UL / params.cycleTime;
-      if (cycleCount >= half)
-      {
-        cycleCount = 0;
-        digitalWrite(PIN_LED, !digitalRead(PIN_LED));
-      }
-    }
-    else digitalWrite(PIN_LED, LOW);
-
-    /* normaliseren en interpoleren sensor */
-    /* pid regeling */
-    /* aansturen motoren */
+    char *param = strtok(NULL, " ");
+    char *value = strtok(NULL, " ");
+    if (!param || !value) { reply("gebruik: set <param> <waarde>"); return; }
+    if (run) { reply("stop de robot eerst (flash schrijven tijdens het rijden = haperingen)"); return; }
+    if (strcmp(param, "cycle") == 0) params.cycleTime = max(100L, atol(value));
+    else if (strcmp(param, "debug") == 0) params.debug = strcmp(value, "on") == 0;
+    else { reply("unknown parameter: %s", param); return; }
+    paramsSave();
+    reply("%s = %s", param, value);
   }
-
-  unsigned long difference = micros() - current;
-  if (difference > calculationTime) calculationTime = difference;
+  else reply("unknown command: \"%s\"", word);
 }
 
-void onButton()
+void wsEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 {
-  unsigned long now = millis();
+  if (type != WStype_TEXT) return;
+  char msg[64];
+  size_t n = length < sizeof(msg) - 1 ? length : sizeof(msg) - 1;
+  memcpy(msg, payload, n);
+  msg[n] = '\0';
+  handleCommand(msg);
+}
+
+void readUsb() // non-blocking
+{
+  static char line[64];
+  static uint8_t pos = 0;
+  while (Serial.available())
+  {
+    char c = Serial.read();
+    if (c == '\r') continue;
+    if (c == '\n') { line[pos] = '\0'; if (pos) handleCommand(line); pos = 0; }
+    else if (pos < sizeof(line) - 1) line[pos++] = c;
+  }
+}
+
+/* ---------------- start/stop interrupt ---------------- */
+void IRAM_ATTR onButton()
+{
+  uint32_t now = millis();
   if (now - lastPress < 250) return;
   lastPress = now;
   run = !run;
 }
 
-Stream &out() { return SerialCommand::current->port(); }
-
-void onUnknownCommand(char *command)
+void setup()
 {
-  out().print("unknown command: \"");
-  out().print(command);
-  out().println("\"");
+  Serial.begin(115200);
+  paramsLoad();
+
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), onButton, FALLING);
+
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP("LineFollower-basis", "12345678");
+  server.on("/", []() { server.send_P(200, "text/html", PAGE); });
+  server.begin();
+  ws.begin();
+  ws.onEvent(wsEvent);
+
+  Serial.println("ready");
 }
 
-void onStart() { run = true;  out().println("started"); }
-void onStop()  { run = false; out().println("stopped"); }
-
-void onSet()
+void loop()
 {
-  char *param = SerialCommand::current->next();
-  char *value = SerialCommand::current->next();
-  if (param == NULL || value == NULL) return;
+  server.handleClient();
+  ws.loop();
+  readUsb();
 
-  if (strcmp(param, "debug") == 0)
+  uint32_t current = micros();
+  if (current - previous >= params.cycleTime)
   {
-    if (strcmp(value, "on") == 0) debug = true;
-    else if (strcmp(value, "off") == 0) debug = false;
+    previous = current;
+
+    /* cyclische code: led knippert aan 1 Hz, onafhankelijk van de cyclustijd */
+    if (run)
+    {
+      if (++cycleCount >= 500000UL / params.cycleTime)
+      {
+        cycleCount = 0;
+        digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+      }
+    }
+    else digitalWrite(LED_PIN, LOW);
+
+    /* sensor uitlezen, positie, pid, motoren (zie finale code) */
+
+    uint32_t difference = micros() - current;
+    if (difference > calculationTime) calculationTime = difference;
   }
-  else if (strcmp(param, "cycle") == 0) params.cycleTime = max(100L, atol(value));
 
-  EEPROM_writeAnything(0, params);
-  out().println("ok");
-}
-
-void onDebug()
-{
-  out().print("state: ");
-  out().println(run ? "running" : "stopped");
-  out().print("debug: ");
-  out().println(debug ? "on" : "off");
-  out().print("cycle time: ");
-  out().println(params.cycleTime);
-  out().print("calculation time: ");
-  out().println(calculationTime);
-  calculationTime = 0;
+  /* debug info buiten het cyclische deel, 1x per seconde */
+  if (params.debug && millis() - lastDebug >= 1000)
+  {
+    lastDebug = millis();
+    reply("running: %d  calculation time: %u us", (int)run, calculationTime);
+  }
 }

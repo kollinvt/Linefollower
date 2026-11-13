@@ -1,33 +1,49 @@
 # finale code
 
-[linefollower/linefollower.ino](linefollower/linefollower.ino) bouwt verder op het [basis programma](../basis/readme.md). In het cyclische deel (standaard elke 2,5 ms) gebeurt:
+[LineFollower/LineFollower.ino](LineFollower/LineFollower.ino): ESP32 + DRV8833 + 2x N20 + Yahboom 8-kanaals sensor (analoog, UART).
 
-1. **sensoren uitlezen + normaliseren**: `map(raw, black[i], white[i], 0, 1000)` per sensor, met de kalibratiewaardes uit EEPROM (zwart = 0, wit = 1000).
-2. **interpoleren**: kwadratische interpolatie door de zwartste sensor en zijn 2 buren. Het dal van de parabool geeft de positie in mm (0 = midden, + = lijn rechts).
-   * **lijn kwijt** (zwartste sensor > `lost`): de robot stuurt maximaal naar de kant waar hij de lijn het laatst zag.
-   * **kruispunt** (≥ 5 sensoren zwart): positie = 0, dus rechtdoor. Twee keer hetzelfde kruispunt kruisen geeft de **rondetijd** (`debug` → `lap time`).
-3. **PID**
-   * P: `output = Kp · error`
-   * I: `iTerm += Ki* · error`, begrensd tot ±510 (anti reset windup). `Ki* = Ki · cycleTime` wordt herrekend bij het aanpassen van de cyclustijd.
-   * D: `Kd* · (error - lastErr)` met `Kd* = Kd / cycleTime`, gefilterd door een 1ste orde laagdoorlaatfilter (`dfilter`).
-   * output begrensd tot ±510
-4. **snelheid**: `power + boost` op een recht stuk. De boost valt lineair weg naarmate de fout groter wordt (bochten).
-5. **verdelen over de motoren** met parameter `diff` (zie leerpad *proportioneel regelen*) en de motoren aansturen (pwm + draairichting, DRV8833). `MAX_PWM` begrenst de motorspanning tot ± 7V.
+Benodigd: board package **esp32 by Espressif**, board **ESP32 Dev Module**, bibliotheek **WebSockets** van Markus Sattler.
 
-De I-term wordt bij elke start en stop op 0 gezet. Er staat **geen seriële communicatie in het cyclische deel**: debug-uitvoer gebeurt erbuiten, maximaal 4x per seconde, en enkel als `debug on` aan staat.
+## opbouw
 
-Rekentijd gemeten via `debug` → `calculation time`: richtwaarde ± 1,2 ms (6x analogRead ± 0,7 ms + float PID). Een cyclustijd van 2500 µs geeft dus ruim 2x marge.
-
-Compileren: Arduino IDE, board **Arduino Micro**, open `linefollower.ino` (de bibliotheken staan in dezelfde map).  
-Gebruik: zie [gebruiksaanwijzing](../../gebruiksaanwijzing/readme.md).
-
-### pinout
-| functie | pin |
+| bestand | functie |
 |---|---|
-| sensoren S2..S7 | A0..A5 |
-| sensor IR leds aan | D4 |
-| motor links AIN1 / AIN2 | D5 / D6 |
-| motor rechts BIN1 / BIN2 | D9 / D10 |
-| start/stop knop | D7 (INT6) |
-| bluetooth HC-05 | D0 / D1 (Serial1, 9600) |
-| run led | D13 |
+| [config.h](LineFollower/config.h) | vaste hardware-instellingen: pinnen, pwm, sensor, WiFi, start/stop knop |
+| [params.cpp](LineFollower/params.cpp) / [.h](LineFollower/params.h) | tabel met alle instelbare parameters + opslaan in flash (Preferences) |
+| [sensor.cpp](LineFollower/sensor.cpp) / [.h](LineFollower/sensor.h) | UART-frames van de Yahboom-sensor lezen, kalibratie (min/max per sensor), lijnsterkte 0..1 |
+| [control.cpp](LineFollower/control.cpp) / [.h](LineFollower/control.h) | regeltaak op **core 1**: positie, PID, snelheidsprofiel, motoren |
+| [motors.cpp](LineFollower/motors.cpp) / [.h](LineFollower/motors.h) | DRV8833 aansturing (pwm 20 kHz), dode-zone compensatie, startpuls |
+| [web.cpp](LineFollower/web.cpp) / [.h](LineFollower/web.h) | WiFi access point, webserver en websocket op **core 0** |
+| [page.h](LineFollower/page.h) | de webpagina (HTML/JS) die op de robot staat |
+
+## werking (elk sensorframe, op core 1)
+
+1. **sensor**: een frame `$A,x1:..,x8:..#` komt binnen → per sensor `n = (raw - min) / (max - min)` met de kalibratiewaardes uit flash → lijnsterkte 0..1 (1 = recht boven de lijn).
+2. **positie (interpolatie)**: gewogen gemiddelde. Elke sensor heeft een positie -7, -5, .., +5, +7. Sensoren onder de ruisdrempel (`noise`) tellen niet mee. Het resultaat is de fout `e` (-7 .. +7, positief = lijn rechts).
+   * **lijn kwijt** (totale sterkte < 0,25): `e = ±lostErr` naar de kant waar de lijn het laatst was
+   * **kruispunt** (≥ `crossN` sensoren actief én beide buitenste): `crossMs` ms rechtdoor (`e = 0`)
+3. **snelheidsprofiel**: `target = vMax - curve · (|e| - curveSt)`, begrensd tot `vMin`. Afremmen gebeurt meteen, optrekken met hoogstens `accel` per frame.
+4. **PID**
+   * P: `kp · e`
+   * I: `ki · Σe`, begrensd tot ±`iMax` (anti windup). Er wordt niet geïntegreerd als de lijn kwijt is.
+   * D: `kd · dF`, waarbij `dF` de gefilterde verandering per frame is (`dFilter`, 1 = geen filter)
+5. **naar de wielen**: `L = base + out`, `R = base - out`. Boven 255 zakken beide wielen samen, zodat het stuurverschil behouden blijft. `maxRev` begrenst het achteruit draaien en `trimL`/`trimR` corrigeren verschillen tussen de motoren.
+6. **motoren**: 0..255 wordt geschaald naar `runPwm`..255 (dode zone). Bij vertrek of omkeren krijgt de motor eerst `kickMs` ms een startpuls `kickPwm`.
+
+**Veiligheid**: komt er 150 ms geen sensorframe binnen (`SENSOR_TIMEOUT_MS`), dan gaan de motoren meteen uit. Tijdens het kalibreren rijdt de robot niet.
+
+**Start/stop**: webpagina (START / STOP, spatiebalk = STOP) of de **BOOT-knop** op de robot. De knop werkt via een hardware interrupt: de ISR zet een vlag en `loop()` schakelt. De blauwe led (GPIO2) brandt zolang de robot rijdt.
+
+**Telemetrie**: 20x per seconde naar de webpagina: fout, basissnelheid, PID-uitvoer, motor-pwm, sterkte per sensor, frames per seconde en de rekentijd per frame (µs).
+
+Gebruik en tunen: zie [gebruiksaanwijzing](../../gebruiksaanwijzing/readme.md).
+
+## pinout
+
+| functie | GPIO |
+|---|---|
+| motor links AIN1 / AIN2 | 26 / 27 |
+| motor rechts BIN1 / BIN2 | 25 / 33 |
+| sensor UART RX2 / TX2 | 16 / 17 (115200 baud) |
+| start/stop knop | 0 (BOOT) |
+| run led | 2 |
