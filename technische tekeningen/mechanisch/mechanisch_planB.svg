@@ -1,86 +1,110 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="990" viewBox="0 0 1400 990">
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="990" viewBox="0 0 1400 990">
 <rect x="0" y="0" width="1400" height="990" fill="#fff"/>
 <rect x="10" y="10" width="1380" height="970" fill="none" stroke="#000" stroke-width="2"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0040a0"/></marker></defs>
-<text x="40" y="50" font-size="15" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">BOVENAANZICHT - 3D-geprinte bodemplaat (naar robot.f3d) - maten in mm</text>
-<polygon points="530.0,234.4 530.0,445.6 442.0,445.6 354.0,551.2 266.0,551.2 266.0,472.0 90.0,472.0 90.0,208.0 266.0,208.0 266.0,128.8 354.0,128.8 442.0,234.4" fill="#dde3ea" stroke="#000" stroke-width="1.6"/>
-<polygon points="492.6,436.8 486.0,436.8 486.0,243.2 492.6,243.2" fill="#b9c3cf" stroke="#000" stroke-width="1"/>
-<text x="486.00000000000006" y="458.8" font-size="11" font-family="Arial" fill="#333" text-anchor="middle" font-weight="normal">sensorbalk + gleuf</text>
-<polygon points="252.8,168.4 103.2,168.4 103.2,137.6 252.8,137.6" fill="#333" stroke="#000" stroke-width="1"/>
-<polygon points="204.4,322.4 151.6,322.4 151.6,181.6 204.4,181.6" fill="none" stroke="#555" stroke-width="1.2" stroke-dasharray="6 4"/>
-<polygon points="252.8,511.6 103.2,511.6 103.2,542.4 252.8,542.4" fill="#333" stroke="#000" stroke-width="1"/>
-<polygon points="204.4,357.6 151.6,357.6 151.6,498.4 204.4,498.4" fill="none" stroke="#555" stroke-width="1.2" stroke-dasharray="6 4"/>
-<text x="178" y="252" font-size="11" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">M1 (N20, onder)</text>
-<text x="178" y="419.2" font-size="11" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">M2 (N20, onder)</text>
-<line x1="178" y1="93.59999999999997" x2="178" y2="586.4000000000001" stroke="#a00" stroke-width="1" stroke-dasharray="8 4 2 4"/>
-<polygon points="409.9,454.4 282.3,454.4 282.3,225.6 409.9,225.6" fill="#fff2c0" stroke="#000" stroke-width="1.6"/>
-<text x="346.08000000000004" y="331.2" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal" transform="rotate(-90 346.08000000000004 331.2)">U1 ESP32 DevKit</text>
-<polygon points="242.7,338.2 163.5,338.2 163.5,267.8 242.7,267.8" fill="#ffe0e0" stroke="#000" stroke-width="1.6"/>
-<text x="203.08000000000004" y="309.2" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U2 DRV8833</text>
-<polygon points="260.7,424.9 163.9,424.9 163.9,350.1 260.7,350.1" fill="#e0f0ff" stroke="#000" stroke-width="1.6"/>
-<text x="212.32" y="392.8" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U4 MT3608</text>
-<polygon points="512.4,507.2 459.6,507.2 459.6,172.8 512.4,172.8" fill="none" stroke="#0060c0" stroke-width="2" stroke-dasharray="6 4"/>
-<polygon points="492.6,485.2 479.4,485.2 479.4,472.0 492.6,472.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,445.6 479.4,445.6 479.4,432.4 492.6,432.4" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,406.0 479.4,406.0 479.4,392.8 492.6,392.8" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,366.4 479.4,366.4 479.4,353.2 492.6,353.2" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,326.8 479.4,326.8 479.4,313.6 492.6,313.6" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,287.2 479.4,287.2 479.4,274.0 492.6,274.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,247.6 479.4,247.6 479.4,234.4 492.6,234.4" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<polygon points="492.6,208.0 479.4,208.0 479.4,194.8 492.6,194.8" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
-<text x="574" y="340" font-size="11" font-family="Arial" fill="#0060c0" text-anchor="middle" font-weight="normal" transform="rotate(-90 574 340)">U3 Yahboom 8-kanaals (onder)</text>
-<circle cx="486.00000000000006" cy="274" r="7.040000000000001" fill="#fff" stroke="#000"/>
-<circle cx="486.00000000000006" cy="406" r="7.040000000000001" fill="#fff" stroke="#000"/>
-<circle cx="310" cy="172.79999999999998" r="7.040000000000001" fill="#fff" stroke="#000"/>
-<circle cx="310" cy="507.20000000000005" r="7.040000000000001" fill="#fff" stroke="#000"/>
-<circle cx="134" cy="340" r="7.040000000000001" fill="#fff" stroke="#000"/>
-<line x1="590" y1="340" x2="670" y2="340" stroke="#000" stroke-width="2" marker-end="url(#a)"/>
-<text x="630" y="330" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">rijrichting</text>
-<line x1="90" y1="591.2" x2="530" y2="591.2" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="310" y="586.2" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">100</text>
-<line x1="178" y1="621.2" x2="486.00000000000006" y2="621.2" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="332" y="616.2" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">70 (wielas → sensor)</text>
-<line x1="90" y1="621.2" x2="178" y2="621.2" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="134" y="616.2" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">20</text>
-<line x1="266" y1="108.79999999999998" x2="354" y2="108.79999999999998" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="310" y="103.79999999999998" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">20</text>
-<line x1="60" y1="208" x2="60" y2="472" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="54" y="340" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 54 340)">60</text>
-<line x1="440" y1="236.39999999999998" x2="440" y2="443.6" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="434" y="340" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 434 340)"></text>
-<text x="434" y="472" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="start" font-weight="normal">48</text>
-<line x1="274.8" y1="129.79999999999998" x2="274.8" y2="550.2" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="268.8" y="340" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 268.8 340)"></text>
-<text x="266.8" y="498.4" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="start" font-weight="normal" transform="rotate(-90 266.8 498.4)">96</text>
-<text x="40" y="650" font-size="15" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">ZIJAANZICHT</text>
-<line x1="60" y1="905" x2="590" y2="905" stroke="#000" stroke-width="2"/>
-<circle cx="178" cy="830.2" r="74.80000000000001" fill="#333"/>
-<rect x="151.60000000000002" y="803.8" width="52.800000000000004" height="52.800000000000004" fill="#999" stroke="#000"/>
-<rect x="90" y="786.2" width="440.00000000000006" height="17.6" fill="#9aa7b5" stroke="#000"/>
-<rect x="282.28000000000003" y="724.6" width="127.60000000000001" height="61.60000000000001" fill="#fff2c0" stroke="#000"/>
-<rect x="163.48000000000002" y="759.8000000000001" width="96.80000000000001" height="26.400000000000002" fill="#e0f0ff" stroke="#000"/>
-<rect x="266" y="803.8000000000001" width="220.00000000000003" height="35.2" fill="#cfe0ff" stroke="#000" stroke-dasharray="5 3"/>
-<text x="376" y="830.2" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">LiPo (positie vrij te kiezen)</text>
-<rect x="459.6" y="884.76" width="52.800000000000004" height="7.040000000000001" fill="#0060c0"/>
-<line x1="486.00000000000006" y1="884.76" x2="486.00000000000006" y2="803.8000000000001" stroke="#777" stroke-width="3"/>
-<circle cx="398" cy="883" r="22" fill="#bbb" stroke="#000"/>
-<line x1="398" y1="861" x2="398" y2="803.8000000000001" stroke="#777" stroke-width="3"/>
-<text x="398" y="921" font-size="11" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">ball caster</text>
-<polygon points="81.2,698.2 160.4,698.2 160.4,711.4000000000001 81.2,715.8000000000001" fill="#d33" stroke="#000"/>
-<line x1="112" y1="711.4000000000001" x2="112" y2="786.2" stroke="#000" stroke-width="2"/>
-<text x="178" y="711.4000000000001" font-size="11" font-family="Arial" fill="#a00" text-anchor="start" font-weight="normal">spoiler (optioneel)</text>
-<line x1="560" y1="905" x2="560" y2="724.6" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="554" y="814.8" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 554 814.8)">± 41 (&lt; 120 chronobrug)</text>
-<line x1="70" y1="905" x2="70" y2="755.4" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
-<text x="64" y="830.2" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 64 830.2)">Ø34 wiel</text>
-<text x="570" y="903" font-size="11" font-family="Arial" fill="#0040a0" text-anchor="start" font-weight="normal">sensor ± 3 mm boven de baan</text>
-<image href="robot_fusion_preview.png" x="930" y="60" width="430" height="430"/>
-<text x="1145" y="500" font-size="12" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">3D-model (Fusion 360: robot.f3d)</text>
+<text x="40" y="50" font-size="15" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">BOVENAANZICHT - LineFollower DUO - 3D-geprinte bodemplaat 4 mm - maten in mm</text>
+<polygon points="690.0,234.0 690.0,426.0 610.0,426.0 610.0,390.0 490.0,390.0 490.0,426.0 410.0,426.0 330.0,522.0 250.0,522.0 250.0,450.0 90.0,450.0 90.0,210.0 250.0,210.0 250.0,138.0 330.0,138.0 410.0,234.0 490.0,234.0 490.0,270.0 610.0,270.0 610.0,234.0" fill="#dde3ea" stroke="#000" stroke-width="1.6"/>
+<polygon points="656.0,418.0 650.0,418.0 650.0,242.0 656.0,242.0" fill="#b9c3cf" stroke="#000" stroke-width="1"/>
+<polygon points="456.0,418.0 450.0,418.0 450.0,242.0 456.0,242.0" fill="#b9c3cf" stroke="#000" stroke-width="1"/>
+<polygon points="390.0,450.0 190.0,450.0 190.0,210.0 390.0,210.0" fill="none" stroke="#4a78c2" stroke-width="1.4" stroke-dasharray="6 4"/>
+<text x="290" y="430" font-size="11" font-family="Arial" fill="#4a78c2" text-anchor="middle" font-weight="normal">LiPo 50x60 (onder)</text>
+<polygon points="238.0,174.0 102.0,174.0 102.0,146.0 238.0,146.0" fill="#333" stroke="#000" stroke-width="1"/>
+<polygon points="194.0,314.0 146.0,314.0 146.0,186.0 194.0,186.0" fill="none" stroke="#555" stroke-width="1.2" stroke-dasharray="6 4"/>
+<polygon points="238.0,486.0 102.0,486.0 102.0,514.0 238.0,514.0" fill="#333" stroke="#000" stroke-width="1"/>
+<polygon points="194.0,346.0 146.0,346.0 146.0,474.0 194.0,474.0" fill="none" stroke="#555" stroke-width="1.2" stroke-dasharray="6 4"/>
+<line x1="170" y1="98" x2="170" y2="562" stroke="#a00" stroke-width="1" stroke-dasharray="8 4 2 4"/>
+<text x="170" y="90" font-size="11" font-family="Arial" fill="#a00" text-anchor="middle" font-weight="normal">wielas</text>
+<polygon points="380.8,434.0 264.8,434.0 264.8,226.0 380.8,226.0" fill="#fff2c0" stroke="#000" stroke-width="1.6"/>
+<text x="322.8" y="330" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal" transform="rotate(-90 322.8 330)">U1 ESP32 DevKit</text>
+<polygon points="228.8,328.4 156.8,328.4 156.8,264.4 228.8,264.4" fill="#ffe0e0" stroke="#000" stroke-width="1.6"/>
+<text x="192.8" y="302" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U2 DRV8833</text>
+<polygon points="245.2,407.2 157.2,407.2 157.2,339.2 245.2,339.2" fill="#e0f0ff" stroke="#000" stroke-width="1.6"/>
+<text x="201.2" y="378" font-size="10" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">U4 MT3608</text>
+<polygon points="674.0,482.0 626.0,482.0 626.0,178.0 674.0,178.0" fill="none" stroke="#c06000" stroke-width="2" stroke-dasharray="6 4"/>
+<polygon points="656.0,462.0 644.0,462.0 644.0,450.0 656.0,450.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,426.0 644.0,426.0 644.0,414.0 656.0,414.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,390.0 644.0,390.0 644.0,378.0 656.0,378.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,354.0 644.0,354.0 644.0,342.0 656.0,342.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,318.0 644.0,318.0 644.0,306.0 656.0,306.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,282.0 644.0,282.0 644.0,270.0 656.0,270.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,246.0 644.0,246.0 644.0,234.0 656.0,234.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<polygon points="656.0,210.0 644.0,210.0 644.0,198.0 656.0,198.0" fill="#c06000" stroke="#c06000" stroke-width="0.5"/>
+<text x="650" y="162" font-size="11" font-family="Arial" fill="#c06000" text-anchor="middle" font-weight="normal">U6 sensor VOORAAN</text>
+<polygon points="474.0,482.0 426.0,482.0 426.0,178.0 474.0,178.0" fill="none" stroke="#0060c0" stroke-width="2" stroke-dasharray="6 4"/>
+<polygon points="456.0,462.0 444.0,462.0 444.0,450.0 456.0,450.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,426.0 444.0,426.0 444.0,414.0 456.0,414.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,390.0 444.0,390.0 444.0,378.0 456.0,378.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,354.0 444.0,354.0 444.0,342.0 456.0,342.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,318.0 444.0,318.0 444.0,306.0 456.0,306.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,282.0 444.0,282.0 444.0,270.0 456.0,270.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,246.0 444.0,246.0 444.0,234.0 456.0,234.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<polygon points="456.0,210.0 444.0,210.0 444.0,198.0 456.0,198.0" fill="#0060c0" stroke="#0060c0" stroke-width="0.5"/>
+<text x="450" y="162" font-size="11" font-family="Arial" fill="#0060c0" text-anchor="middle" font-weight="normal">U3 sensor STUREN</text>
+<circle cx="550" cy="330" r="24" fill="none" stroke="#555" stroke-dasharray="5 3" stroke-width="1.5"/>
+<text x="550" y="406" font-size="10" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">ball caster</text>
+<circle cx="650" cy="270" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="650" cy="390" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="450" cy="270" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="450" cy="390" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="550" cy="298" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="550" cy="362" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="290" cy="178" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="290" cy="482" r="6.4" fill="#fff" stroke="#000"/>
+<circle cx="130" cy="330" r="6.4" fill="#fff" stroke="#000"/>
+<line x1="760" y1="330" x2="840" y2="330" stroke="#000" stroke-width="2" marker-end="url(#a)"/>
+<text x="800" y="320" font-size="12" font-family="Arial" fill="#000" text-anchor="middle" font-weight="normal">rijrichting</text>
+<line x1="90" y1="562" x2="690" y2="562" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="390" y="557" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">150</text>
+<line x1="170" y1="592" x2="650" y2="592" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="410" y="587" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">120 (wielas → sensor VOORAAN)</text>
+<line x1="170" y1="622" x2="450" y2="622" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="310" y="617" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">70 (wielas → sensor STUREN)</text>
+<line x1="90" y1="592" x2="170" y2="592" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="130" y="587" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">20</text>
+<line x1="490" y1="118" x2="610" y2="118" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="550" y="113" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal">hals 30</text>
+<line x1="60" y1="210" x2="60" y2="450" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="54" y="330" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 54 330)">60</text>
+<line x1="290" y1="138" x2="290" y2="522" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="302" y="330" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 302 330)">96</text>
+<line x1="720" y1="234" x2="720" y2="426" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="732" y="330" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 732 330)">48</text>
+<text x="40" y="690" font-size="15" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">ZIJAANZICHT</text>
+<line x1="60" y1="905" x2="750" y2="905" stroke="#000" stroke-width="2"/>
+<circle cx="170" cy="837" r="68" fill="#333"/>
+<rect x="146" y="813" width="48" height="48" fill="#999" stroke="#000"/>
+<rect x="90" y="797" width="600" height="16" fill="#9aa7b5" stroke="#000"/>
+<rect x="264.8" y="741" width="116" height="56" fill="#fff2c0" stroke="#000"/>
+<rect x="156.79999999999995" y="773" width="88" height="24" fill="#e0f0ff" stroke="#000"/>
+<rect x="190" y="813" width="200" height="32" fill="#cfe0ff" stroke="#000" stroke-dasharray="5 3"/>
+<rect x="626" y="886.6" width="48" height="6.4" fill="#c06000"/>
+<line x1="650" y1="886.6" x2="650" y2="813" stroke="#777" stroke-width="3"/>
+<rect x="426" y="886.6" width="48" height="6.4" fill="#0060c0"/>
+<line x1="450" y1="886.6" x2="450" y2="813" stroke="#777" stroke-width="3"/>
+<circle cx="550" cy="881" r="24" fill="#bbb" stroke="#000"/>
+<line x1="550" y1="857" x2="550" y2="813" stroke="#777" stroke-width="3"/>
+<text x="550" y="921" font-size="11" font-family="Arial" fill="#555" text-anchor="middle" font-weight="normal">ball caster</text>
+<text x="650" y="921" font-size="11" font-family="Arial" fill="#c06000" text-anchor="middle" font-weight="normal">VOORAAN</text>
+<text x="450" y="921" font-size="11" font-family="Arial" fill="#0060c0" text-anchor="middle" font-weight="normal">STUREN</text>
+<line x1="720" y1="905" x2="720" y2="741" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="714" y="823" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 714 823)">± 41 (&lt; 120 chronobrug)</text>
+<line x1="70" y1="905" x2="70" y2="769" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>
+<text x="64" y="837" font-size="12" font-family="Arial" fill="#0040a0" text-anchor="middle" font-weight="normal" transform="rotate(-90 64 837)">Ø34 wiel</text>
+<text x="860" y="110" font-size="14" font-family="Arial" fill="#880000" text-anchor="start" font-weight="bold">WAAROM 2 SENSOREN ACHTER ELKAAR?</text>
+<text x="860" y="138" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">sensor VOORAAN (120 mm voor de wielas):</text>
+<text x="860" y="157" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">  ziet een bocht ± 50 mm eerder -> de robot</text>
+<text x="860" y="176" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">  remt AF voor hij in de bocht zit</text>
+<text x="860" y="195" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">sensor STUREN (70 mm voor de wielas):</text>
+<text x="860" y="214" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">  volgt de lijn nauwkeurig -> input PID</text>
+<text x="860" y="233" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">lijn kwijt op STUREN maar zichtbaar VOORAAN:</text>
+<text x="860" y="252" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">  sturen op de sensor vooraan (S-bochten)</text>
+<text x="860" y="271" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">smalle hals + ball caster onder de hals:</text>
+<text x="860" y="290" font-size="12" font-family="Arial" fill="#333" text-anchor="start" font-weight="normal">  lange neus blijft licht en gesteund</text>
 <rect x="970" y="840" width="410" height="130" fill="#fff" stroke="#000" stroke-width="2"/>
 <line x1="970" y1="880" x2="1380" y2="880" stroke="#000" stroke-width="1"/>
 <line x1="970" y1="915" x2="1380" y2="915" stroke="#000" stroke-width="1"/>
-<text x="980" y="867" font-size="16" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">LineFollower - plan B - mechanische layout</text>
-<text x="980" y="902" font-size="13" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">3D-geprinte bodemplaat 4 mm - maten in mm (± 1 mm)</text>
-<text x="980" y="938" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">bron: robot.f3d (Fusion 360) - massa ± 150 g</text>
-<text x="980" y="956" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">afmetingen L x B x H: 100 x 96 x ± 41 mm   rev 3.0</text>
+<text x="980" y="867" font-size="16" font-family="Arial" fill="#000" text-anchor="start" font-weight="bold">LineFollower DUO - mechanische layout</text>
+<text x="980" y="902" font-size="13" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">3D-geprinte bodemplaat 4 mm - maten in mm</text>
+<text x="980" y="938" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">bron: fusion_bodemplaat_duo.py (Fusion 360)</text>
+<text x="980" y="956" font-size="12" font-family="Arial" fill="#000" text-anchor="start" font-weight="normal">L x B x H: 150 x 96 x ± 41 mm - ± 170 g   rev 4.0</text>
 </svg>

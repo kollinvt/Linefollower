@@ -1,0 +1,10 @@
+{
+  "autodeskProduct": "Fusion360",
+  "type": "script",
+  "author": "LineFollower",
+  "description": {
+    "": "Bouwt de 3D-printbare bodemplaat van de LineFollower DUO (2 sensoren achter elkaar)."
+  },
+  "supportedOS": "windows|mac",
+  "editEnabled": true
+}

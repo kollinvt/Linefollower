@@ -149,8 +149,9 @@ block(620, 330, 200, "U1  ESP32 DevKit V1", "ESP32-WROOM-32 - 240 MHz - WiFi", [
 ], [
   ["GPIO26", "AIN1"], ["GPIO27", "AIN2"], ["GPIO25", "BIN1"], ["GPIO33", "BIN2"],
   ["GPIO16 RX2", "SENS_TX"], ["GPIO17 TX2", "SENS_RX"],
+  ["GPIO18 RX1", "SENS2_TX"], ["GPIO19 TX1", "SENS2_RX"],
 ]);
-text(720, 540, "blauwe led GPIO2 on board = run indicator", { size: 12, fill: "#555", anchor: "middle" });
+text(720, 590, "blauwe led GPIO2 on board = run indicator", { size: 12, fill: "#555", anchor: "middle" });
 
 block(140, 330, 180, "U2  DRV8833", "dubbele h-brug (mosfet)", [
   ["VM", "VBAT"], ["GND", "GND"], ["nSLEEP", "+3V3"], ["AIN1", "AIN1"], ["AIN2", "AIN2"],
@@ -169,11 +170,15 @@ motor(mxp, m2y, "M2 rechts");
 text(140, 560, "M1, M2: N20 6V micro gear motor", { size: 12, fill: "#555" });
 text(140, 576, "pwm 20 kHz, fast decay", { size: 12, fill: "#555" });
 
-block(1060, 330, 200, "U3  Yahboom 8-kanaals", "IR lijnsensor, UART 115200", [
+block(1060, 330, 200, "U3  Yahboom 8-kanaals", "sensor STUREN (70 mm voor wielas)", [
   ["5V", "+5V"], ["GND", "GND"], ["TX", "SENS_TX"], ["RX", "SENS_RX"],
 ], []);
-text(1160, 480, "analoge modus via commando $0,1,0#", { size: 12, fill: "#555", anchor: "middle" });
-text(1160, 496, "8 kanalen, 0..4095 per sensor", { size: 12, fill: "#555", anchor: "middle" });
+text(1160, 480, "UART 115200 - 8 kanalen", { size: 12, fill: "#555", anchor: "middle" });
+
+block(1060, 560, 200, "U6  Yahboom 8-kanaals", "sensor VOORAAN (120 mm voor wielas)", [
+  ["5V", "+5V"], ["GND", "GND"], ["TX", "SENS2_TX"], ["RX", "SENS2_RX"],
+], []);
+text(1160, 710, "vooruitkijken: bocht vroeg zien", { size: 12, fill: "#555", anchor: "middle" });
 
 block(140, 700, 180, "U4  MT3608", "step-up 3,7V → 5V", [
   ["VIN+", "VBAT"], ["VIN-", "GND"],
@@ -190,20 +195,20 @@ s.push(`<rect x="${tx}" y="${ty}" width="410" height="130" fill="#fff" stroke="#
 line(tx, ty + 40, tx + 410, ty + 40, "#880000", 1);
 line(tx, ty + 75, tx + 410, ty + 75, "#880000", 1);
 text(tx + 10, ty + 27, "LineFollower - plan B - elektronisch schema", { bold: true, size: 16 });
-text(tx + 10, ty + 62, "Syntheseproject HOGENT - ESP32 + DRV8833 + Yahboom", { size: 13 });
+text(tx + 10, ty + 62, "Syntheseproject HOGENT - DUO: 2 sensoren achter elkaar", { size: 13 });
 text(tx + 10, ty + 98, "Alle GND's zijn met elkaar verbonden (massasymbool).", { size: 12 });
-text(tx + 10, ty + 116, "Nets met dezelfde naam zijn met elkaar verbonden.  rev 2.0", { size: 12 });
+text(tx + 10, ty + 116, "Nets met dezelfde naam zijn met elkaar verbonden.  rev 3.0", { size: 12 });
 
 /* legende netten */
 text(560, 640, "NETTEN", { bold: true, size: 14, fill: "#880000" });
 const legend = [
   "BAT+  : LiPo + (vóór SW1) → TP4056 B+ (opladen)",
   "VBAT  : LiPo na SW1 (3,0..4,2V) → DRV8833 VM, MT3608 VIN+",
-  "+5V   : MT3608 → ESP32 VIN, sensor 5V, power led",
+  "+5V   : MT3608 → ESP32 VIN, beide sensoren 5V, power led",
   "+3V3  : 3,3V regulator ESP32 → DRV8833 nSLEEP",
   "AIN1/2, BIN1/2: GPIO26, 27, 25, 33 → h-brug (pwm 20 kHz)",
-  "SENS_TX: sensor TX → GPIO16 (RX2)",
-  "SENS_RX: GPIO17 (TX2) → sensor RX",
+  "SENS_TX / SENS_RX: sensor STUREN ↔ GPIO16 / GPIO17",
+  "SENS2_TX / SENS2_RX: sensor VOORAAN ↔ GPIO18 / GPIO19",
   "BTN   : GPIO0 (BOOT-knop) start/stop interrupt",
 ];
 legend.forEach((l, i) => text(560, 665 + i * 18, l, { size: 12, fill: "#333" }));
@@ -212,12 +217,13 @@ const schema = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H
 fs.writeFileSync(path.join(__dirname, "..", "elektronisch", "schema_planB.svg"), schema);
 
 /* ======================================================================= */
-/* mechanische tekening - 3D-geprint chassis (naar robot.f3d)               */
+/* mechanische tekening - DUO: 3D-geprinte bodemplaat met 2 sensoren        */
 /* robotcoördinaten in mm: X = afstand vanaf de voorkant (0 = voorkant      */
-/* sensorbalk, 100 = achterkant), Y = zijwaarts (0 = midden, + = links)     */
+/* sensorbalk VOORAAN, 150 = achterkant), Y = zijwaarts (0 = midden, + = links) */
+/* zelfde maten als fusion_bodemplaat_duo.py                                 */
 /* ======================================================================= */
 s = [];
-const K = 4.4; // px per mm
+const K = 4.0; // px per mm
 const MW = 1400, MH = 990;
 s.push(`<rect x="0" y="0" width="${MW}" height="${MH}" fill="#fff"/>`);
 s.push(`<rect x="10" y="10" width="${MW - 20}" height="${MH - 20}" fill="none" stroke="#000" stroke-width="2"/>`);
@@ -228,113 +234,124 @@ function dimH(x1, x2, y, label) {
   s.push(`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>`);
   T((x1 + x2) / 2, y - 5, label, { anchor: "middle", fill: "#0040a0", size: 12 });
 }
-function dimV(x, y1, y2, label) {
+function dimV(x, y1, y2, label, side = -6) {
   s.push(`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="#0040a0" stroke-width="1" marker-start="url(#a)" marker-end="url(#a)"/>`);
-  T(x - 6, (y1 + y2) / 2, label, { anchor: "middle", fill: "#0040a0", size: 12, rot: -90 });
+  if (label) T(x + side, (y1 + y2) / 2, label, { anchor: "middle", fill: "#0040a0", size: 12, rot: -90 });
 }
 
+/* geometrie (identiek aan fusion_bodemplaat_duo.py) */
+const LEN = 150, AXLE = 130, AHEAD_X = 10, STEER_X = 60, CASTER_X = 35;
+const OUTLINE = [[0, 24], [0, -24], [20, -24], [20, -15], [50, -15], [50, -24], [70, -24], [90, -48],
+  [110, -48], [110, -30], [150, -30], [150, 30], [110, 30], [110, 48], [90, 48], [70, 24], [50, 24],
+  [50, 15], [20, 15], [20, 24]];
+const HOLES = [[10, 15], [10, -15], [60, 15], [60, -15], [35, 8], [35, -8], [100, 38], [100, -38], [140, 0]];
+
 /* bovenaanzicht: voorkant rechts (rijrichting →), achterkant links */
-const ox = 90, oy = 340;               // ox = scherm-x van de achterkant (X=100), oy = middenlijn
-const LEN = 100;
-const px = X => ox + (LEN - X) * K;    // robot X -> scherm x
-const py = Y => oy - Y * K;            // robot Y -> scherm y
+const ox = 90, oy = 330;
+const px = X => ox + (LEN - X) * K;
+const py = Y => oy - Y * K;
 const poly = (pts, fill, o = {}) => s.push(`<polygon points="${pts.map(([X, Y]) => `${px(X).toFixed(1)},${py(Y).toFixed(1)}`).join(" ")}" fill="${fill}" stroke="${o.stroke || "#000"}" stroke-width="${o.sw || 1.6}"${o.dash ? ' stroke-dasharray="6 4"' : ""}/>`);
 const rect = (X1, Y1, X2, Y2, fill, o = {}) => poly([[X1, Y1], [X2, Y1], [X2, Y2], [X1, Y2]], fill, o);
 
-T(40, 50, "BOVENAANZICHT - 3D-geprinte bodemplaat (naar robot.f3d) - maten in mm", { bold: true, size: 15 });
+T(40, 50, "BOVENAANZICHT - LineFollower DUO - 3D-geprinte bodemplaat 4 mm - maten in mm", { bold: true, size: 15 });
 
-// plaat (4 mm, PLA/PETG): sensorbalk 0..20, schuine overgang 20..40, breed deel 40..60, achterstuk 60..100
-const plate = [
-  [0, 24], [0, -24], [20, -24], [40, -48], [60, -48], [60, -30], [100, -30],
-  [100, 30], [60, 30], [60, 48], [40, 48], [20, 24],
-];
-poly(plate, "#dde3ea");
-// gleuf in de sensorbalk
+poly(OUTLINE, "#dde3ea");
+// gleuven
 rect(8.5, -22, 10, 22, "#b9c3cf", { sw: 1 });
-T(px(10), py(-27), "sensorbalk + gleuf", { anchor: "middle", size: 11, fill: "#333" });
-// wielen in de uitsparingen (Ø34, 7 breed), as op X = 80
-const axleX = 80;
+rect(58.5, -22, 60, 22, "#b9c3cf", { sw: 1 });
+// LiPo onder de plaat (gestippeld)
+rect(75, -30, 125, 30, "none", { dash: true, stroke: "#4a78c2", sw: 1.4 });
+T(px(100), py(-25), "LiPo 50x60 (onder)", { anchor: "middle", size: 11, fill: "#4a78c2" });
+// wielen in de uitsparingen + motoren onder de plaat
 for (const side of [1, -1]) {
-  rect(axleX - 17, side * 39, axleX + 17, side * 46, "#333", { sw: 1 });
-  rect(axleX - 6, side * 4, axleX + 6, side * 36, "none", { dash: true, stroke: "#555", sw: 1.2 }); // N20 onder de plaat
+  rect(AXLE - 17, side * 39, AXLE + 17, side * 46, "#333", { sw: 1 });
+  rect(AXLE - 6, side * 4, AXLE + 6, side * 36, "none", { dash: true, stroke: "#555", sw: 1.2 });
 }
-T(px(axleX), py(20), "M1 (N20, onder)", { anchor: "middle", size: 11, fill: "#555" });
-T(px(axleX), py(-18), "M2 (N20, onder)", { anchor: "middle", size: 11, fill: "#555" });
-L(px(axleX), py(56), px(axleX), py(-56), { dash: true, col: "#a00" });
-// onderdelen (uit de schetsen in Fusion)
-rect(27.3, -26, 56.3, 26, "#fff2c0");
-T(px(41.8), py(2), "U1 ESP32 DevKit", { anchor: "middle", size: 12, rot: -90 });
-rect(65.3, 0.4, 83.3, 16.4, "#ffe0e0");
-T(px(74.3), py(7), "U2 DRV8833", { anchor: "middle", size: 10 });
-rect(61.2, -19.3, 83.2, -2.3, "#e0f0ff");
-T(px(72.2), py(-12), "U4 MT3608", { anchor: "middle", size: 10 });
-// sensor onder de sensorbalk
-rect(4, -38, 16, 38, "none", { dash: true, stroke: "#0060c0", sw: 2 });
-for (let i = 0; i < 8; i++) {
-  const sy = (i - 3.5) * 9;
-  rect(8.5, sy - 1.5, 11.5, sy + 1.5, "#0060c0", { stroke: "#0060c0", sw: 0.5 });
+L(px(AXLE), py(58), px(AXLE), py(-58), { dash: true, col: "#a00" });
+T(px(AXLE), py(60), "wielas", { anchor: "middle", size: 11, fill: "#a00" });
+// onderdelen bovenop
+rect(77.3, -26, 106.3, 26, "#fff2c0");
+T(px(91.8), py(0), "U1 ESP32 DevKit", { anchor: "middle", size: 12, rot: -90 });
+rect(115.3, 0.4, 133.3, 16.4, "#ffe0e0");
+T(px(124.3), py(7), "U2 DRV8833", { anchor: "middle", size: 10 });
+rect(111.2, -19.3, 133.2, -2.3, "#e0f0ff");
+T(px(122.2), py(-12), "U4 MT3608", { anchor: "middle", size: 10 });
+// sensoren onder de sensorbalken
+for (const [X, name, col] of [[AHEAD_X, "U6 sensor VOORAAN", "#c06000"], [STEER_X, "U3 sensor STUREN", "#0060c0"]]) {
+  rect(X - 6, -38, X + 6, 38, "none", { dash: true, stroke: col, sw: 2 });
+  for (let i = 0; i < 8; i++) {
+    const sy = (i - 3.5) * 9;
+    rect(X - 1.5, sy - 1.5, X + 1.5, sy + 1.5, col, { stroke: col, sw: 0.5 });
+  }
+  T(px(X), py(42), name, { anchor: "middle", size: 11, fill: col });
 }
-T(px(-10), py(0), "U3 Yahboom 8-kanaals (onder)", { anchor: "middle", size: 11, fill: "#0060c0", rot: -90 });
-// bevestigingsgaten (M3)
-for (const [X, Y] of [[10, 15], [10, -15], [50, 38], [50, -38], [90, 0]]) s.push(`<circle cx="${px(X)}" cy="${py(Y)}" r="${1.6 * K}" fill="#fff" stroke="#000"/>`);
+// ball caster onder de hals
+s.push(`<circle cx="${px(CASTER_X)}" cy="${py(0)}" r="${6 * K}" fill="none" stroke="#555" stroke-dasharray="5 3" stroke-width="1.5"/>`);
+T(px(CASTER_X), py(-19), "ball caster", { anchor: "middle", size: 10, fill: "#555" });
+// gaten
+for (const [X, Y] of HOLES) s.push(`<circle cx="${px(X)}" cy="${py(Y)}" r="${1.6 * K}" fill="#fff" stroke="#000"/>`);
 // rijrichting
-s.push(`<line x1="${px(0) + 60}" y1="${oy}" x2="${px(0) + 140}" y2="${oy}" stroke="#000" stroke-width="2" marker-end="url(#a)"/>`);
-T(px(0) + 100, oy - 10, "rijrichting", { anchor: "middle", size: 12 });
+s.push(`<line x1="${px(0) + 70}" y1="${oy}" x2="${px(0) + 150}" y2="${oy}" stroke="#000" stroke-width="2" marker-end="url(#a)"/>`);
+T(px(0) + 110, oy - 10, "rijrichting", { anchor: "middle", size: 12 });
 // maten
-dimH(px(100), px(0), py(-48) + 40, "100");
-dimH(px(axleX), px(10), py(-48) + 70, "70 (wielas → sensor)");
-dimH(px(100), px(axleX), py(-48) + 70, "20");
-dimH(px(60), px(40), py(48) - 20, "20");
-dimV(px(100) - 30, py(30), py(-30), "60");
-dimV(px(20) - 2, py(24) + 2, py(-24) - 2, "");
-T(px(20) - 8, py(-30), "48", { size: 12, fill: "#0040a0" });
-dimV(px(58), py(48) + 1, py(-48) - 1, "");
-T(px(58) - 8, py(-36), "96", { size: 12, fill: "#0040a0", rot: -90 });
+const yb = py(-48);
+dimH(px(150), px(0), yb + 40, "150");
+dimH(px(AXLE), px(AHEAD_X), yb + 70, "120 (wielas → sensor VOORAAN)");
+dimH(px(AXLE), px(STEER_X), yb + 100, "70 (wielas → sensor STUREN)");
+dimH(px(150), px(AXLE), yb + 70, "20");
+dimH(px(50), px(20), py(48) - 20, "hals 30");
+dimV(px(150) - 30, py(30), py(-30), "60");
+dimV(px(100), py(48), py(-48), "96", 12);
+dimV(px(0) + 30, py(24), py(-24), "48", 12);
 
 /* zijaanzicht */
 const sx = 90, groundY = 905;
 const sxX = X => sx + (LEN - X) * K;
-T(40, 650, "ZIJAANZICHT", { bold: true, size: 15 });
+T(40, 690, "ZIJAANZICHT", { bold: true, size: 15 });
 L(sx - 30, groundY, sxX(0) + 60, groundY, { w: 2 });
-s.push(`<circle cx="${sxX(axleX)}" cy="${groundY - 17 * K}" r="${17 * K}" fill="#333"/>`);
-s.push(`<rect x="${sxX(axleX + 6)}" y="${groundY - 23 * K}" width="${12 * K}" height="${12 * K}" fill="#999" stroke="#000"/>`);
-const pcbY = groundY - 27 * K; // onderkant plaat op ± 23 mm
-s.push(`<rect x="${sxX(100)}" y="${pcbY}" width="${100 * K}" height="${4 * K}" fill="#9aa7b5" stroke="#000"/>`);
-// ESP32 op headers
-s.push(`<rect x="${sxX(56.3)}" y="${pcbY - 14 * K}" width="${29 * K}" height="${14 * K}" fill="#fff2c0" stroke="#000"/>`);
-// DRV8833 + MT3608
-s.push(`<rect x="${sxX(83.3)}" y="${pcbY - 6 * K}" width="${22 * K}" height="${6 * K}" fill="#e0f0ff" stroke="#000"/>`);
-// LiPo (onder de plaat tussen de motoren en de sensor)
-s.push(`<rect x="${sxX(60)}" y="${pcbY + 4 * K}" width="${50 * K}" height="${8 * K}" fill="#cfe0ff" stroke="#000" stroke-dasharray="5 3"/>`);
-T(sxX(35), pcbY + 10 * K, "LiPo (positie vrij te kiezen)", { anchor: "middle", size: 10 });
-// sensor onder de sensorbalk
-s.push(`<rect x="${sxX(16)}" y="${groundY - 4.6 * K}" width="${12 * K}" height="${1.6 * K}" fill="#0060c0"/>`);
-L(sxX(10), groundY - 4.6 * K, sxX(10), pcbY + 4 * K, { w: 3, col: "#777" });
-// glijder vooraan
-s.push(`<circle cx="${sxX(30)}" cy="${groundY - 5 * K}" r="${5 * K}" fill="#bbb" stroke="#000"/>`);
-L(sxX(30), groundY - 10 * K, sxX(30), pcbY + 4 * K, { w: 3, col: "#777" });
-T(sxX(30), groundY + 16, "ball caster", { anchor: "middle", size: 11, fill: "#555" });
-// spoiler
-s.push(`<polygon points="${sxX(102)},${pcbY - 20 * K} ${sxX(84)},${pcbY - 20 * K} ${sxX(84)},${pcbY - 17 * K} ${sxX(102)},${pcbY - 16 * K}" fill="#d33" stroke="#000"/>`);
-L(sxX(95), pcbY - 17 * K, sxX(95), pcbY, { w: 2 });
-T(sxX(80), pcbY - 17 * K, "spoiler (optioneel)", { size: 11, fill: "#a00" });
+s.push(`<circle cx="${sxX(AXLE)}" cy="${groundY - 17 * K}" r="${17 * K}" fill="#333"/>`);
+s.push(`<rect x="${sxX(AXLE + 6)}" y="${groundY - 23 * K}" width="${12 * K}" height="${12 * K}" fill="#999" stroke="#000"/>`);
+const pcbY = groundY - 27 * K;
+s.push(`<rect x="${sxX(150)}" y="${pcbY}" width="${150 * K}" height="${4 * K}" fill="#9aa7b5" stroke="#000"/>`);
+s.push(`<rect x="${sxX(106.3)}" y="${pcbY - 14 * K}" width="${29 * K}" height="${14 * K}" fill="#fff2c0" stroke="#000"/>`);
+s.push(`<rect x="${sxX(133.3)}" y="${pcbY - 6 * K}" width="${22 * K}" height="${6 * K}" fill="#e0f0ff" stroke="#000"/>`);
+s.push(`<rect x="${sxX(125)}" y="${pcbY + 4 * K}" width="${50 * K}" height="${8 * K}" fill="#cfe0ff" stroke="#000" stroke-dasharray="5 3"/>`);
+for (const [X, col] of [[AHEAD_X, "#c06000"], [STEER_X, "#0060c0"]]) {
+  s.push(`<rect x="${sxX(X + 6)}" y="${groundY - 4.6 * K}" width="${12 * K}" height="${1.6 * K}" fill="${col}"/>`);
+  L(sxX(X), groundY - 4.6 * K, sxX(X), pcbY + 4 * K, { w: 3, col: "#777" });
+}
+s.push(`<circle cx="${sxX(CASTER_X)}" cy="${groundY - 6 * K}" r="${6 * K}" fill="#bbb" stroke="#000"/>`);
+L(sxX(CASTER_X), groundY - 12 * K, sxX(CASTER_X), pcbY + 4 * K, { w: 3, col: "#777" });
+T(sxX(CASTER_X), groundY + 16, "ball caster", { anchor: "middle", size: 11, fill: "#555" });
+T(sxX(AHEAD_X), groundY + 16, "VOORAAN", { anchor: "middle", size: 11, fill: "#c06000" });
+T(sxX(STEER_X), groundY + 16, "STUREN", { anchor: "middle", size: 11, fill: "#0060c0" });
 dimV(sxX(0) + 30, groundY, pcbY - 14 * K, "± 41 (&lt; 120 chronobrug)");
 dimV(sx - 20, groundY, groundY - 34 * K, "Ø34 wiel");
-T(sxX(0) + 40, groundY - 2, "sensor ± 3 mm boven de baan", { size: 11, fill: "#0040a0" });
 
-/* preview uit Fusion */
-s.push(`<image href="robot_fusion_preview.png" x="${MW - 470}" y="60" width="430" height="430"/>`);
-T(MW - 255, 500, "3D-model (Fusion 360: robot.f3d)", { anchor: "middle", size: 12, fill: "#555" });
+/* uitleg */
+const ex = 860;
+T(ex, 110, "WAAROM 2 SENSOREN ACHTER ELKAAR?", { bold: true, size: 14, fill: "#880000" });
+[
+  "sensor VOORAAN (120 mm voor de wielas):",
+  "  ziet een bocht ± 50 mm eerder -> de robot",
+  "  remt AF voor hij in de bocht zit",
+  "sensor STUREN (70 mm voor de wielas):",
+  "  volgt de lijn nauwkeurig -> input PID",
+  "lijn kwijt op STUREN maar zichtbaar VOORAAN:",
+  "  sturen op de sensor vooraan (S-bochten)",
+  "smalle hals + ball caster onder de hals:",
+  "  lange neus blijft licht en gesteund",
+].forEach((l, i) => T(ex, 138 + i * 19, l, { size: 12, fill: "#333" }));
 
 /* titelblok */
 const mx = MW - 430, my = MH - 150;
 s.push(`<rect x="${mx}" y="${my}" width="410" height="130" fill="#fff" stroke="#000" stroke-width="2"/>`);
 L(mx, my + 40, mx + 410, my + 40); L(mx, my + 75, mx + 410, my + 75);
-T(mx + 10, my + 27, "LineFollower - plan B - mechanische layout", { bold: true, size: 16 });
-T(mx + 10, my + 62, "3D-geprinte bodemplaat 4 mm - maten in mm (± 1 mm)", { size: 13 });
-T(mx + 10, my + 98, "bron: robot.f3d (Fusion 360) - massa ± 150 g", { size: 12 });
-T(mx + 10, my + 116, "afmetingen L x B x H: 100 x 96 x ± 41 mm   rev 3.0", { size: 12 });
+T(mx + 10, my + 27, "LineFollower DUO - mechanische layout", { bold: true, size: 16 });
+T(mx + 10, my + 62, "3D-geprinte bodemplaat 4 mm - maten in mm", { size: 13 });
+T(mx + 10, my + 98, "bron: fusion_bodemplaat_duo.py (Fusion 360)", { size: 12 });
+T(mx + 10, my + 116, "L x B x H: 150 x 96 x ± 41 mm - ± 170 g   rev 4.0", { size: 12 });
 
-const mech = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">\n${s.join("\n")}\n</svg>\n`;
+const mech = `<svg xmlns="http://www.w3.org/2000/svg" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">\n${s.join("\n")}\n</svg>\n`;
 fs.writeFileSync(path.join(__dirname, "..", "mechanisch", "mechanisch_planB.svg"), mech);
 console.log("ok");
