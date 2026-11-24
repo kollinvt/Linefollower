@@ -4,8 +4,6 @@
 
 Benodigd: board package **esp32 by Espressif**, board **ESP32 Dev Module**, bibliotheek **WebSockets** van Markus Sattler.
 
-> **DUO-ontwerp (2 sensoren):** deze code gebruikt de sensor **STUREN** (GPIO16/17). De sensor **VOORAAN** (GPIO18/19) is in de hardware voorzien voor vooruitkijken en afremmen voor de bocht.
-
 ## opbouw
 
 | bestand | functie |
@@ -46,7 +44,6 @@ Gebruik en tunen: zie [gebruiksaanwijzing](../../gebruiksaanwijzing/readme.md).
 |---|---|
 | motor links AIN1 / AIN2 | 26 / 27 |
 | motor rechts BIN1 / BIN2 | 25 / 33 |
-| sensor STUREN RX2 / TX2 | 16 / 17 (115200 baud) |
-| sensor VOORAAN | 18 / 19 |
+| sensor UART RX2 / TX2 | 16 / 17 (115200 baud) |
 | start/stop knop | 0 (BOOT) |
 | run led | 2 |

@@ -2,6 +2,8 @@
 
 Autonome linefollower robot - syntheseproject HOGENT - **plan B**: een volledig werkende robot opgebouwd met breakout boards. Een **ESP32** stuurt hem aan met een PID-regeling. Je bedient hem draadloos via een **WiFi-webpagina** en de instellingen worden in het flashgeheugen bewaard.
 
+![3D-model chassis](images/robot_fusion_preview.png)
+
 ![mechanische layout](images/mechanisch_planB.png)
 
 ## specifications
@@ -11,15 +13,15 @@ Autonome linefollower robot - syntheseproject HOGENT - **plan B**: een volledig 
 | **microcontroller** | ESP32 DevKit V1 (ESP32-WROOM-32, dual core 240 MHz) |
 | **motors** | 2x N20 micro metal gear motor 6V |
 | **h-bridge** | DRV8833 breakout (dubbele mosfet h-brug), pwm 20 kHz |
-| **sensors** | **2x** Yahboom 8-kanaals IR lijnsensor **achter elkaar**: sensor VOORAAN (vooruitkijken, afremmen voor de bocht) + sensor STUREN (PID) |
+| **sensors** | Yahboom 8-kanaals IR lijnsensor, analoge waardes via UART (8 x 0..4095) |
 | **batteries** | PKCELL LiPo 1S 3,7V 2500 mAh (LP785060), MT3608 step-up naar 5V, TP4056 lader |
 | **wireless communication** | WiFi access point "LineFollower" + webpagina met websocket (http://192.168.4.1) |
-| **chassis** | 3D-geprinte bodemplaat DUO 4 mm (Fusion 360-script: [fusion_bodemplaat_duo](technische%20tekeningen/mechanisch/fusion_bodemplaat_duo/fusion_bodemplaat_duo.py)) |
-| **distance sensor - motors** | sensor VOORAAN 120 mm, sensor STUREN 70 mm voor de wielas |
-| **weight** | ± 170 g |
-| **dimensions** | 150 x 96 x ± 41 mm (L x B x H), past onder de chronobrug (12 x 12 cm) |
+| **chassis** | 3D-geprinte bodemplaat 4 mm (Fusion 360: [robot.f3d](technische%20tekeningen/mechanisch/robot.f3d)) |
+| **distance sensor - motors** | 70 mm (sensor voor de wielas) |
+| **weight** | ± 150 g |
+| **dimensions** | 100 x 96 x ± 41 mm (L x B x H), past onder de chronobrug (12 x 12 cm) |
 | **speed** | *in te vullen na de test* (minimum 0,5 m/s) |
-| **kostprijs** | ± € 71 (zie [bill of materials](bill%20of%20materials/readme.md)) |
+| **kostprijs** | ± € 56 (zie [bill of materials](bill%20of%20materials/readme.md)) |
 
 ## software in het kort
 
